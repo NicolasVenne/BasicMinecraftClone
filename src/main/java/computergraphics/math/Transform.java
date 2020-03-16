@@ -1,63 +1,63 @@
 package computergraphics.math;
 
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 /**
  * Transform
  */
 public class Transform {
 
-    private Vector3 position;
-    private Vector3 rotation;
-    private Vector3 scale;
+    public Vector3f position;
+    public Vector3f rotation;
+    public Vector3f scale;
 
-    public Transform(Vector3 position, Vector3 rotation, Vector3 scale) {
-        this.position = new Vector3(position);
-        this.rotation = new Vector3(rotation);
-        this.scale = new Vector3(scale);
+    public Transform(Vector3f position, Vector3f rotation, Vector3f scale) {
+        this.position = new Vector3f(position);
+        this.rotation = new Vector3f(rotation);
+        this.scale = new Vector3f(scale);
     }
 
-    public Vector3 position() {
-        return position;
-    }
+    
 
-    public Vector3 rotation() {
-        return new Vector3(rotation);
-    }
+    public Transform(Transform transform) {
+        this.position = new Vector3f(transform.position);
+        this.rotation = new Vector3f(transform.rotation);
+        this.scale = new Vector3f(transform.scale);
+	}
 
-    public Vector3 scale() {
-        return new Vector3(scale);
-    }
 
-    public void translate(Vector3 to) {
+
+	public void translate(Vector3f to) {
         this.position.x += to.x;
         this.position.y += to.y;
         this.position.z += to.z;
     }
 
-    public void rotate(Vector3 by) {
+    public void rotate(Vector3f by) {
         this.rotation.x += by.x;
         this.rotation.y += by.y;
         this.rotation.z += by.z;
     }
 
-    public void scale(Vector3 to) {
+    public void scale(Vector3f to) {
         this.scale.x = to.x;
         this.scale.y = to.y;
         this.scale.z = to.z;
     }
 
-    public static Matrix4x4 createTransformationMatrix(Transform transform) {
-        Matrix4x4 result = new Matrix4x4();
-        result.translate(transform.position());
-        result.rotate(transform.rotation().x, new Vector3(1f,0f,0f));
-        result.rotate(transform.rotation().y, new Vector3(0f,1f,0f));
-        result.rotate(transform.rotation().z, new Vector3(0f,0f,1f));
-        result.scale(transform.scale());
+    public static Matrix4f createWorldMatrix(Transform transform) {
+        Matrix4f result = new Matrix4f();
+        result.translate(transform.position);
+        result.rotate(transform.rotation.x, new Vector3f(1f,0f,0f));
+        result.rotate(transform.rotation.y, new Vector3f(0f,1f,0f));
+        result.rotate(transform.rotation.z, new Vector3f(0f,0f,1f));
+        result.scale(transform.scale);
         return result;
     }
 
 	public static Transform zero() {
-		return new Transform(Vector3.zero(), Vector3.zero(), Vector3.one());
+		return new Transform(new Vector3f(0,0,0), new Vector3f(0,0,0), new Vector3f(0,0,0));
 	}
 
 

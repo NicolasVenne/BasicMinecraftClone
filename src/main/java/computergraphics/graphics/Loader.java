@@ -9,12 +9,13 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL30.*;
 
-import computergraphics.math.Vector2;
-import computergraphics.math.Vector3;
+import computergraphics.math.Utils;
 import computergraphics.models.*;
 import de.matthiasmann.twl.utils.PNGDecoder;
 
@@ -27,19 +28,19 @@ public class  Loader {
     private static List<Integer> vbos = new ArrayList<Integer>();
     private static List<Integer> textures = new ArrayList<Integer>();
 
-    public static Model createModel(Vector3[] positions, int[] indicies) {
+    public static Model createModel(Vector3f[] positions, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
-        addDataToAttribute(0, Vector3.convertToFloatArray(positions), 3);
+        addDataToAttribute(0, Utils.convertDataToFloatArray(positions), 3);
         glBindVertexArray(0);
         return new Model(vaoID, indicies.length);
     }
 
-    public static TexturedModel createTexturedModel(Vector3[] positions, Vector2[] uv, int[] indicies) {
+    public static TexturedModel createTexturedModel(Vector3f[] positions, Vector2f[] uv, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
-        addDataToAttribute(0, Vector3.convertToFloatArray(positions), 3);
-        addDataToAttribute(1, Vector2.convertToFloatArray(uv), 2);
+        addDataToAttribute(0, Utils.convertDataToFloatArray(positions), 3);
+        addDataToAttribute(1, Utils.convertDataToFloatArray(uv), 2);
         glBindVertexArray(0);
         return new TexturedModel(vaoID, indicies.length);
     }

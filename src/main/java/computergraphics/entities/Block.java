@@ -1,9 +1,10 @@
 package computergraphics.entities;
 
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+
 import computergraphics.graphics.Loader;
 import computergraphics.math.Transform;
-import computergraphics.math.Vector2;
-import computergraphics.math.Vector3;
 import computergraphics.models.TexturedModel;
 
 /**
@@ -11,69 +12,69 @@ import computergraphics.models.TexturedModel;
  */
 public class Block extends Entity{
     
-    private static Vector3[] verticies = {
+    private static Vector3f[] verticies = {
                 
-        new Vector3(-0.5f,0.5f,-0.5f),
-		new Vector3(-0.5f,-0.5f,-0.5f),
-		new Vector3(0.5f,-0.5f,-0.5f),	
-		new Vector3(0.5f,0.5f,-0.5f),		
+        new Vector3f(-0.5f,0.5f,-0.5f),
+		new Vector3f(-0.5f,-0.5f,-0.5f),
+		new Vector3f(0.5f,-0.5f,-0.5f),	
+		new Vector3f(0.5f,0.5f,-0.5f),		
 				
-		new Vector3(-0.5f,0.5f,0.5f),
-		new Vector3(-0.5f,-0.5f,0.5f),	
-		new Vector3(0.5f,-0.5f,0.5f),	
-		new Vector3(0.5f,0.5f,0.5f),
+		new Vector3f(-0.5f,0.5f,0.5f),
+		new Vector3f(-0.5f,-0.5f,0.5f),	
+		new Vector3f(0.5f,-0.5f,0.5f),	
+		new Vector3f(0.5f,0.5f,0.5f),
 				
-        new Vector3(0.5f,0.5f,-0.5f),	
-	    new Vector3(0.5f,-0.5f,-0.5f),	
-		new Vector3(0.5f,-0.5f,0.5f),	
-		new Vector3(0.5f,0.5f,0.5f),
+        new Vector3f(0.5f,0.5f,-0.5f),	
+	    new Vector3f(0.5f,-0.5f,-0.5f),	
+		new Vector3f(0.5f,-0.5f,0.5f),	
+		new Vector3f(0.5f,0.5f,0.5f),
 				
-		new Vector3(-0.5f,0.5f,-0.5f),	
-		new Vector3(-0.5f,-0.5f,-0.5f),	
-		new Vector3(-0.5f,-0.5f,0.5f),	
-		new Vector3(-0.5f,0.5f,0.5f),
+		new Vector3f(-0.5f,0.5f,-0.5f),	
+		new Vector3f(-0.5f,-0.5f,-0.5f),	
+		new Vector3f(-0.5f,-0.5f,0.5f),	
+		new Vector3f(-0.5f,0.5f,0.5f),
 				
-		new Vector3(-0.5f,0.5f,0.5f),
-		new Vector3(-0.5f,0.5f,-0.5f),
-		new Vector3(0.5f,0.5f,-0.5f),
-		new Vector3(0.5f,0.5f,0.5f),
+		new Vector3f(-0.5f,0.5f,0.5f),
+		new Vector3f(-0.5f,0.5f,-0.5f),
+		new Vector3f(0.5f,0.5f,-0.5f),
+		new Vector3f(0.5f,0.5f,0.5f),
 				
-		new Vector3(-0.5f,-0.5f,0.5f),
-		new Vector3(-0.5f,-0.5f,-0.5f),
-		new Vector3(0.5f,-0.5f,-0.5f),
-        new Vector3(0.5f,-0.5f,0.5f)
+		new Vector3f(-0.5f,-0.5f,0.5f),
+		new Vector3f(-0.5f,-0.5f,-0.5f),
+		new Vector3f(0.5f,-0.5f,-0.5f),
+        new Vector3f(0.5f,-0.5f,0.5f)
     };
 
-    private static Vector2[] uv = {
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0),
+    private static Vector2f[] uv = {
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0),
 
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0),
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0),
 
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0),
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0),
 
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0),
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0),
 
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0),
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0),
 
-        new Vector2(0,0),
-        new Vector2(0,1),
-        new Vector2(1,1),
-        new Vector2(1,0)
+        new Vector2f(0,0),
+        new Vector2f(0,1),
+        new Vector2f(1,1),
+        new Vector2f(1,0)
     };
 
     private static int[] indicies = {0,1,3,	

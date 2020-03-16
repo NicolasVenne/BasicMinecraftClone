@@ -2,13 +2,14 @@ package computergraphics.graphics;
 
 import static org.lwjgl.opengl.GL30.*;
 
+import org.joml.Vector3f;
+
 import computergraphics.core.Chunk;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Entity;
-import computergraphics.math.Matrix4x4;
+import org.joml.Matrix4f;
 import computergraphics.math.Transform;
-import computergraphics.math.Vector3;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
 /**
@@ -20,11 +21,12 @@ public class Renderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 
-	private Matrix4x4 projectionMatrix;
+	private Matrix4f projectionMatrix;
 
 	public void initialize(StaticShader shader) {
 		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
-		projectionMatrix = Matrix4x4.perspective(FOV, ratio, NEAR_PLANE, FAR_PLANE);
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.setPerspective(FOV, ratio, NEAR_PLANE, FAR_PLANE);
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
 		shader.stop();
@@ -45,7 +47,7 @@ public class Renderer {
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, texturedModel.getTexture().getId());
 		}
-		Matrix4x4 matrix = Transform.createTransformationMatrix(entity.getTransform());
+		Matrix4f matrix = Transform.createWorldMatrix(entity.getTransform());
 		shader.loadTransformationMatrix(matrix);
 		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
 		for(int i = 0; i < shader.getAttributeCount(); i++) {
@@ -60,7 +62,7 @@ public class Renderer {
                 for(int x = 0; x < Chunk.CHUNK_WIDTH; x++) {
 					if(chunk.chunk[x][y][z] != BlockType.AIR) {
 						if(chunk.isNextToAir(x,y,z)) {
-							render(new Block(chunk.chunk[x][y][z], new Transform(new Vector3(x,y,z), Vector3.zero(), Vector3.one())), shader);
+							render(new Block(chunk.chunk[x][y][z], new Transform(new Vector3f(x,y,z), new Vector3f(0,0,0), new Vector3f(1,1,1))), shader);
 						}
 					}
                 }

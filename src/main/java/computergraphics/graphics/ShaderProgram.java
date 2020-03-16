@@ -6,11 +6,12 @@ import java.nio.FloatBuffer;
 
 import org.lwjgl.system.MemoryStack;
 
-import computergraphics.math.Matrix2x2;
-import computergraphics.math.Matrix3x3;
-import computergraphics.math.Matrix4x4;
-import computergraphics.math.Vector2;
-import computergraphics.math.Vector3;
+import org.joml.Matrix4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
+import org.joml.Vector2f;
 import computergraphics.math.Vector4;
 
 /**
@@ -111,50 +112,50 @@ public abstract class ShaderProgram {
         glUniform1i(location, value);
     }
 
-    public void setUniform(int location, Vector2 value) {
+    public void setUniform(int location, Vector2f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Vector2.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(2);
+            value.get(buffer);
             glUniform2fv(location, buffer);
         }
     }
 
-    public void setUniform(int location, Vector3 value) {
+    public void setUniform(int location, Vector3f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Vector3.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(3);
+            value.get(buffer);
             glUniform3fv(location, buffer);
         }
     }
 
-    public void setUniform(int location, Vector4 value) {
+    public void setUniform(int location, Vector4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Vector4.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(4);
+            value.get(buffer);
             glUniform4fv(location, buffer);
         }
     }
 
-    public void setUniform(int location, Matrix2x2 value) {
+    public void setUniform(int location, Matrix2f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Matrix2x2.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(4);
+            value.get(buffer);
             glUniformMatrix2fv(location, false, buffer);
         }
     }
 
-    public void setUniform(int location, Matrix3x3 value) {
+    public void setUniform(int location, Matrix3f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Matrix3x3.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(9);
+            value.get(buffer);
             glUniformMatrix3fv(location, false, buffer);
         }
     }
 
-    public void setUniform(int location, Matrix4x4 value) {
+    public void setUniform(int location, Matrix4f value) {
         try(MemoryStack stack = MemoryStack.stackPush()) {
-            FloatBuffer buffer = stack.mallocFloat(Matrix4x4.FLOAT_SIZE);
-            value.addToBuffer(buffer);
+            FloatBuffer buffer = stack.mallocFloat(16);
+            value.get(buffer);
             glUniformMatrix4fv(location, false, buffer);
         }
     }

@@ -1,6 +1,6 @@
 package computergraphics.graphics;
 
-import computergraphics.math.Matrix4x4;
+import org.joml.Matrix4f;
 
 /**
  * StaticShader
@@ -36,15 +36,15 @@ public class StaticShader extends ShaderProgram{
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
     }
 
-    public void loadTransformationMatrix(Matrix4x4 matrix) {
+    public void loadTransformationMatrix(Matrix4f matrix) {
         super.setUniform(transformMatrixLocation, matrix);
     }
 
-    public void loadProjectionMatrix(Matrix4x4 matrix) {
+    public void loadProjectionMatrix(Matrix4f matrix) {
         super.setUniform(projectionMatrixLocation, matrix);
     } 
 
-    public void loadViewMatrix(Matrix4x4 matrix) {
+    public void loadViewMatrix(Matrix4f matrix) {
         super.setUniform(viewMatrixLocation, matrix);
     }
 	

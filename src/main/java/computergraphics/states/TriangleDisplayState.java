@@ -20,10 +20,10 @@ import computergraphics.models.TexturedModel;
 import computergraphics.graphics.Renderer;
 import computergraphics.graphics.StaticShader;
 import computergraphics.graphics.Texture2D;
-import computergraphics.math.Matrix4x4;
+import org.joml.Matrix4f;
 import computergraphics.math.Transform;
-import computergraphics.math.Vector2;
-import computergraphics.math.Vector3;
+import org.joml.Vector3f;
+import org.joml.Vector2f;
 
 /**
  * TriangleDisplayState
@@ -66,7 +66,7 @@ public class TriangleDisplayState implements State {
         renderer.reset();        
 
         program.start();
-        Matrix4x4 view = Matrix4x4.view(camera);
+        Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
         renderer.render(chunk, program);
         // for(int i = 0; i < chunks.length; i++) {

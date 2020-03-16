@@ -56,5 +56,9 @@ public class Transform {
         return result;
     }
 
+	public static Transform zero() {
+		return new Transform(Vector3.zero(), Vector3.zero(), Vector3.one());
+	}
+
 
 }

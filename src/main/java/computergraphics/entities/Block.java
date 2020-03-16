@@ -89,11 +89,10 @@ public class Block extends Entity{
         20,21,23,
         23,21,22};
 
-    private static TexturedModel blockModel = Loader.createTexturedModel(verticies, uv, indicies);
+    public static TexturedModel blockModel = Loader.createTexturedModel(verticies, uv, indicies);
 
     public Block(BlockType type, Transform initTransform) {
-        super(new TexturedModel(blockModel), initTransform);
-        super.model.attachTexture(type.getTexture());
+        super(type.getModel(), initTransform);
         
     }
 

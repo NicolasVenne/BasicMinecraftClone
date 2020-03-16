@@ -27,27 +27,28 @@ public class Game {
     protected Renderer renderer;
 
     protected FiniteStateMachine state;
-    protected boolean isRunning;
+
+    protected GameStatus status;
 
     public Game() {
-        isRunning = false;
+        status = GameStatus.INIT;
         timer = new Timer();
         renderer = new Renderer();
         state = new FiniteStateMachine();
     }
 
     public void begin() {
-        initialize();
+        status = initialize();
         startGameLoop();
         dispose();
     }
 
-    public void initialize() {
+    public GameStatus initialize() {
         errorCallback = GLFWErrorCallback.createPrint();
         glfwSetErrorCallback(errorCallback);
 
         if(!glfwInit()) {
-            throw new IllegalStateException("Can't init GLFW");
+            return GameStatus.GLError;
         }
 
         window = new Window("Minecraft Clone");
@@ -58,7 +59,8 @@ public class Game {
 
         initializeStates();
 
-        isRunning = true;
+        return GameStatus.OK;
+
     }
 
     private void initializeStates() {
@@ -72,9 +74,9 @@ public class Game {
         float dt = 1f / TARGET_UPS;
         float alpha;
 
-        while(isRunning) {
+        while(status == GameStatus.OK) {
             if(window.shouldClose()) {
-                isRunning = false;
+                status = GameStatus.EXIT;
             }
 
             delta = Timer.delta();

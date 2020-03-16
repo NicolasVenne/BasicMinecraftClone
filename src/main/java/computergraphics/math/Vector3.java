@@ -72,6 +72,13 @@ public class Vector3 {
         return this.x * b.x + this.y * b.y + this.z * b.z;
     }
 
+    public Vector3 cross(Vector3 b) {
+        float x = this.y * b.z - this.z * b.y;
+        float y = this.z * b.x - this.x * b.z;
+        float z = this.x * b.y - this.y * b.x;
+        return new Vector3(x,y,z);
+    }
+
     public Vector3 lerp(Vector3 b, float alpha) {
         return this.multiply(1f - alpha).add(b.multiply(alpha));
     }

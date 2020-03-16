@@ -38,11 +38,17 @@ public class Camera {
         float deltaX = (float)mouseX[0] - oldMouseX;
         float deltaY = (float)mouseY[0] - oldMouseY;
 
+        if(transform.rotation().y > 270f - 30f && transform.rotation().y < 270f + 30f) {
+            deltaY = 0f;
+        }
         transform.rotate(new Vector3(ROTATE_SPEED * deltaY * delta, ROTATE_SPEED * deltaX * delta, 0f));
+
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             transform.position().z -= 0.02f * Math.cos(Math.toRadians(transform.rotation().y));
             transform.position().x += 0.02f * Math.sin(Math.toRadians(transform.rotation().y));
+            transform.position().y += 0.02f * Math.cos(Math.toRadians(transform.rotation().x + 90f));
+            
 
         }
         if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {

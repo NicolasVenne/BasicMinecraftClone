@@ -8,6 +8,7 @@ import java.util.Vector;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 
+import computergraphics.core.Chunk;
 import computergraphics.core.State;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
@@ -33,13 +34,12 @@ public class TriangleDisplayState implements State {
 
 
     private StaticShader program;
-    private TexturedModel block;
     private Renderer renderer;
-    private Entity test;
-    private Entity test2;
+    private Chunk chunk;
+    private Block block;
+    private Chunk[] chunks;
     private Camera camera;
 
-    private Block[] blocks;
 
     private int uniModel;
     private float previousAngle = 0f;
@@ -68,9 +68,10 @@ public class TriangleDisplayState implements State {
         program.start();
         Matrix4x4 view = Matrix4x4.view(camera);
         program.loadViewMatrix(view);
-
-        renderer.render(blocks[0], program);
-        
+        renderer.render(chunk, program);
+        // for(int i = 0; i < chunks.length; i++) {
+        //     renderer.render(chunks[i], program);
+        // }        
         program.stop();
 
     }
@@ -78,14 +79,18 @@ public class TriangleDisplayState implements State {
     @Override
     public void initialize() {
 
-        glEnable(GL_DEPTH_TEST);
-        glDepthFunc(GL_LESS);
-        blocks = new Block[1];
-            
         
-
-        Transform transform = new Transform(new Vector3(0f,0f,-1f), new Vector3(0f,0f,0f), Vector3.one());
-        blocks[0] = new Block(BlockType.DIRT, transform);
+        chunks = new Chunk[20 * 20];
+        int index = 0;
+        for(int x = 0; x < 20; x++){
+            for(int y = 0; y < 20; y++) {
+                chunks[index] = new Chunk();
+                index++;
+            }
+        }         
+        block = new Block(BlockType.DIRT, Transform.zero());
+        chunk = new Chunk();
+        
 
 
 

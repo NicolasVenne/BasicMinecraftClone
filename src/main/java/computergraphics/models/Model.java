@@ -1,9 +1,13 @@
 package computergraphics.models;
 
+
+
 /**
  * Model
  */
 public class Model {
+
+
 
     private int vaoID;
     private int vertexCount;

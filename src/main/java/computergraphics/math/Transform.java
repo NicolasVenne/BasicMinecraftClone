@@ -57,7 +57,7 @@ public class Transform {
     }
 
 	public static Transform zero() {
-		return new Transform(new Vector3f(0,0,0), new Vector3f(0,0,0), new Vector3f(0,0,0));
+		return new Transform(new Vector3f(0,0,0), new Vector3f(0,0,0), new Vector3f(1,1,1));
 	}
 
 

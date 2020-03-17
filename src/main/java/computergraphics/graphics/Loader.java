@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.joml.Vector2f;
@@ -44,6 +45,14 @@ public class  Loader {
         glBindVertexArray(0);
         return new TexturedModel(vaoID, indicies.length);
     }
+
+    public static TexturedModel createTexturedBlock(Vector3f[] positions, Vector2f[] uv, int faceLength) {
+        int vaoID = generateVAO();
+        addDataToAttribute(0, Utils.convertDataToFloatArray(positions), 3);
+        addDataToAttribute(1, Utils.convertDataToFloatArray(uv), 2);
+        glBindVertexArray(0);
+        return new TexturedModel(vaoID, faceLength);
+	}
 
     public static Texture2D loadTexture(String file) {
         PNGDecoder decoder = null;
@@ -108,7 +117,7 @@ public class  Loader {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
-    private static IntBuffer convertToIntBuffer(int[] data) {
+    public static IntBuffer convertToIntBuffer(int[] data) {
         IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
         buffer.put(data);
         buffer.flip();
@@ -128,6 +137,8 @@ public class  Loader {
         glBindVertexArray(vaoID);
         return vaoID;
     }
+
+	
 
     
 }

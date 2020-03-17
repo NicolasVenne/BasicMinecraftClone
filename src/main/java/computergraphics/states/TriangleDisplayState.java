@@ -21,9 +21,12 @@ import computergraphics.graphics.Renderer;
 import computergraphics.graphics.StaticShader;
 import computergraphics.graphics.Texture2D;
 import org.joml.Matrix4f;
+
+import computergraphics.math.NoiseGen;
 import computergraphics.math.Transform;
 import org.joml.Vector3f;
 import org.joml.Vector2f;
+import org.joml.Vector2i;
 
 /**
  * TriangleDisplayState
@@ -35,9 +38,8 @@ public class TriangleDisplayState implements State {
 
     private StaticShader program;
     private Renderer renderer;
-    private Chunk chunk;
+
     private Block block;
-    private Chunk[] chunks;
     private Camera camera;
 
 
@@ -68,10 +70,11 @@ public class TriangleDisplayState implements State {
         program.start();
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
-        renderer.render(chunk, program);
-        // for(int i = 0; i < chunks.length; i++) {
-        //     renderer.render(chunks[i], program);
-        // }        
+        // renderer.render(block, program);
+
+        for(Chunk c : Chunk.visibleChunks) {
+            renderer.render(c, program);
+        }
         program.stop();
 
     }
@@ -80,18 +83,17 @@ public class TriangleDisplayState implements State {
     public void initialize() {
 
         
-        chunks = new Chunk[20 * 20];
-        int index = 0;
-        for(int x = 0; x < 20; x++){
-            for(int y = 0; y < 20; y++) {
-                chunks[index] = new Chunk();
-                index++;
+
+        for(int x = 0; x < 5; x++){
+            for(int y = 0; y < 5; y++) {
+                new Chunk(new Vector2i(x,y));
             }
-        }         
-        block = new Block(BlockType.DIRT, Transform.zero());
-        chunk = new Chunk();
+        }       
+        
+        Chunk.finished();
         
 
+       
 
 
         program = new StaticShader();

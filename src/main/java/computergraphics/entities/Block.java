@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import org.joml.Vector3i;
 
 import computergraphics.core.Chunk;
+import computergraphics.core.TerrainGenerator;
 import computergraphics.graphics.Loader;
 import computergraphics.math.Transform;
 import computergraphics.models.TexturedModel;
@@ -166,15 +167,15 @@ public class Block {
     public Vector3i blockChunkCoordinates;
     public Transform worldTransform;
 
-    public void checkFaces() {
-        Chunk c = Chunk.world.get(currentChunkCoordinates);
+    public void checkEdgeFaces() {
+        Chunk c = TerrainGenerator.instance.world.get(currentChunkCoordinates);
         int x = blockChunkCoordinates.x;
         int y = blockChunkCoordinates.y;
         int z = blockChunkCoordinates.z;
 
-        if(x + 1 >= Chunk.CHUNK_WIDTH && Chunk.world.containsKey(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y))) {
-            Chunk nextChunk = Chunk.world.get(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y));
-            if(nextChunk.chunk[0][y][z].type == BlockType.AIR) {
+        if(x + 1 >= Chunk.CHUNK_WIDTH && TerrainGenerator.instance.world.containsKey(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y))) {
+            Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y));
+            if(nextChunk.chunk != null && nextChunk.chunk[0][y][z].type == BlockType.AIR) {
                 faces[Faces.RIGHT.index] = 1;
             } else {
                 faces[Faces.RIGHT.index] = 0;
@@ -184,9 +185,10 @@ public class Block {
         } else {
             faces[Faces.RIGHT.index] = 0;
         }
-        if(x - 1 < 0 && Chunk.world.containsKey(new Vector2i(currentChunkCoordinates.x - 1, currentChunkCoordinates.y))) {
-            Chunk nextChunk = Chunk.world.get(new Vector2i(currentChunkCoordinates.x - 1, currentChunkCoordinates.y));
-            if(nextChunk.chunk[15][y][z].type == BlockType.AIR) {
+        if(x - 1 < 0 && TerrainGenerator.instance.world.containsKey(new Vector2i(currentChunkCoordinates.x - 1, currentChunkCoordinates.y))) {
+
+            Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x - 1, currentChunkCoordinates.y));
+            if(nextChunk.chunk != null && nextChunk.chunk[15][y][z].type == BlockType.AIR) {
                 faces[Faces.LEFT.index] = 1;
             } else {
                 faces[Faces.LEFT.index] = 0;
@@ -206,9 +208,9 @@ public class Block {
         } else {
             faces[Faces.BOTTOM.index] = 0;
         }
-        if(z + 1 >= Chunk.CHUNK_WIDTH && Chunk.world.containsKey(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y + 1))) {
-            Chunk nextChunk = Chunk.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y + 1));
-            if(nextChunk.chunk[x][y][0].type == BlockType.AIR) {
+        if(z + 1 >= Chunk.CHUNK_WIDTH && TerrainGenerator.instance.world.containsKey(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y + 1))) {
+            Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y + 1));
+            if(nextChunk.chunk != null && nextChunk.chunk[x][y][0].type == BlockType.AIR) {
                 faces[Faces.FRONT.index] = 1;
             } else {
                 faces[Faces.FRONT.index] = 0;
@@ -218,9 +220,9 @@ public class Block {
         } else {
             faces[Faces.FRONT.index] = 0;
         }
-        if(z - 1 < 0 && Chunk.world.containsKey(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y - 1))) {
-            Chunk nextChunk = Chunk.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y - 1));
-            if(nextChunk.chunk[x][y][15].type == BlockType.AIR) {
+        if(z - 1 < 0 && TerrainGenerator.instance.world.containsKey(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y - 1))) {
+            Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y - 1));
+            if(nextChunk.chunk != null && nextChunk.chunk[x][y][15].type == BlockType.AIR) {
                 faces[Faces.BACK.index] = 1;
             } else {
                 faces[Faces.BACK.index] = 0;
@@ -252,6 +254,45 @@ public class Block {
             new Vector3f(1,1,1)
             );
     }
+
+	public void checkInnerFaces() {
+
+        Chunk c = TerrainGenerator.instance.world.get(currentChunkCoordinates);
+        int x = blockChunkCoordinates.x;
+        int y = blockChunkCoordinates.y;
+        int z = blockChunkCoordinates.z;
+
+        if(c.chunk[x + 1][y][z].type == BlockType.AIR) {
+            faces[Faces.RIGHT.index] = 1;
+        } else {
+            faces[Faces.RIGHT.index] = 0;
+        }
+        if(c.chunk[x - 1][y][z].type == BlockType.AIR) {
+            faces[Faces.LEFT.index] = 1;
+        } else {
+            faces[Faces.LEFT.index] = 0;
+        }
+        if(y + 1 >= Chunk.CHUNK_HEIGHT || c.chunk[x][y + 1][z].type == BlockType.AIR) {
+            faces[Faces.TOP.index] = 1;
+        } else {
+            faces[Faces.TOP.index] = 0;
+        }
+        if(y - 1 >= 0 && c.chunk[x][y - 1][z].type == BlockType.AIR) {
+            faces[Faces.BOTTOM.index] = 1;
+        } else {
+            faces[Faces.BOTTOM.index] = 0;
+        }
+        if(c.chunk[x][y][z + 1].type == BlockType.AIR) {
+            faces[Faces.FRONT.index] = 1;
+        } else {
+            faces[Faces.FRONT.index] = 0;
+        }
+        if(c.chunk[x][y][z - 1].type == BlockType.AIR) {
+            faces[Faces.BACK.index] = 1;
+        } else {
+            faces[Faces.BACK.index] = 0;
+        }
+	}
 
 
 

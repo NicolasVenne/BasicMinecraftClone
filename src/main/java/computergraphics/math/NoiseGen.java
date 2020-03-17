@@ -5,6 +5,8 @@ import java.util.Random;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
+import computergraphics.core.Chunk;
+
 /**
  * NoiseGen
  */
@@ -54,6 +56,7 @@ public class NoiseGen {
                 noiseMap[x][y] = noiseHeight;
                 float normalizedHeight = (noiseMap[x][y] + 1) / (maxPossibleHeight / 0.9f);
                 noiseMap[x][y] = Math.max(0, Math.min(Integer.MAX_VALUE, normalizedHeight));
+                noiseMap[x][y] *= Chunk.CHUNK_HEIGHT / 2;
             }
         }
 

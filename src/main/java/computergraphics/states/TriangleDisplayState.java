@@ -10,6 +10,8 @@ import org.lwjgl.system.MemoryStack;
 
 import computergraphics.core.Chunk;
 import computergraphics.core.State;
+import computergraphics.core.TerrainGenerator;
+import computergraphics.core.ThreadDataRequester;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Camera;
@@ -25,6 +27,7 @@ import org.joml.Matrix4f;
 import computergraphics.math.NoiseGen;
 import computergraphics.math.Transform;
 import org.joml.Vector3f;
+import org.joml.Vector3i;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -41,6 +44,8 @@ public class TriangleDisplayState implements State {
 
     private Block block;
     private Camera camera;
+    private TerrainGenerator terrainGenerator;
+    private ThreadDataRequester threadDataRequester;
 
 
     private int uniModel;
@@ -59,6 +64,8 @@ public class TriangleDisplayState implements State {
         
         previousAngle = angle;
         angle += delta * angelPerSecond;
+        terrainGenerator.Update();
+        threadDataRequester.Update();
         
     }
 
@@ -70,9 +77,8 @@ public class TriangleDisplayState implements State {
         program.start();
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
-        // renderer.render(block, program);
 
-        for(Chunk c : Chunk.visibleChunks) {
+        for(Chunk c : terrainGenerator.visibleChunks) {
             renderer.render(c, program);
         }
         program.stop();
@@ -82,24 +88,14 @@ public class TriangleDisplayState implements State {
     @Override
     public void initialize() {
 
-        
-
-        for(int x = 0; x < 5; x++){
-            for(int y = 0; y < 5; y++) {
-                new Chunk(new Vector2i(x,y));
-            }
-        }       
-        
-        Chunk.finished();
-        
-
-       
-
-
+        new Block(BlockType.DIRT, new Vector3i(0,0,0), new Vector2i(0,0));
+        threadDataRequester = new ThreadDataRequester();
         program = new StaticShader();
 
         renderer = new Renderer();
         camera = new Camera();
+        terrainGenerator = new TerrainGenerator(camera.transform());
+
 
         renderer.initialize(program);
 

@@ -12,6 +12,7 @@ import computergraphics.entities.BlockType;
 import computergraphics.entities.Entity;
 import org.joml.Matrix4f;
 import computergraphics.math.Transform;
+import computergraphics.models.MaterialModel;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
 /**
@@ -23,7 +24,7 @@ public class Renderer {
 	private static final float NEAR_PLANE = 0.1f;
 	private static final float FAR_PLANE = 1000f;
 
-	private Matrix4f projectionMatrix;
+	public Matrix4f projectionMatrix;
 
 	public void initialize(StaticShader shader) {
 		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
@@ -59,18 +60,22 @@ public class Renderer {
 	}
 
 	public void render(Block block, StaticShader shader) {
+		if(!block.isInsideFrustrum) return;
 		Model model = block.type.getModel();
 		glBindVertexArray(model.getVaoID());
 		for(int i = 0; i < shader.getAttributeCount(); i++) {
 			glEnableVertexAttribArray(i);
 		}
-		if(model instanceof TexturedModel) {
-			TexturedModel texturedModel = (TexturedModel)model;
+
+		if(model instanceof MaterialModel) {
+			MaterialModel matModel = (MaterialModel)model;
 			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, texturedModel.getTexture().getId());
+			glBindTexture(GL_TEXTURE_2D, matModel.getMaterial().getTexture().getId());
+			shader.loadMaterial(matModel.getMaterial());
 		}
 		Matrix4f matrix = Transform.createWorldMatrix(block.worldTransform);
 		shader.loadTransformationMatrix(matrix);
+		
 		for(int i = 0; i < block.faces.length; i++) {
 			if(block.faces[i] == 1) {
 				int vbo = glGenBuffers();
@@ -85,6 +90,7 @@ public class Renderer {
 			glDisableVertexAttribArray(i);
 		}
 		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	public void render(Chunk chunk, StaticShader shader) {
@@ -111,6 +117,7 @@ public class Renderer {
 
 	public void dispose() {
 	}
+
 
     
 }

@@ -5,10 +5,12 @@ import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 
+import computergraphics.core.BlockVisibilityChange;
 import computergraphics.core.Chunk;
 import computergraphics.core.TerrainGenerator;
 import computergraphics.graphics.Loader;
 import computergraphics.math.Transform;
+import computergraphics.models.MaterialModel;
 import computergraphics.models.TexturedModel;
 
 /**
@@ -16,7 +18,9 @@ import computergraphics.models.TexturedModel;
  */
 public class Block {
     
-    private static Vector3f[] verticies = {
+    public static final float BoundingRadius = 1f;
+
+	private static Vector3f[] verticies = {
                 
         // //V0
         // new Vector3f(-0.5f,  0.5f,  0.5f),
@@ -70,11 +74,44 @@ public class Block {
         new Vector3f(-0.5f, -0.5f, -0.5f), //V21
         new Vector3f(-0.5f,  0.5f, -0.5f), //V22
         new Vector3f(0.5f,  0.5f, -0.5f),  //V23
-
-
-
-
          
+    };
+
+    public static Vector3f[] normals = {
+        new Vector3f(0.0f, 0.0f, 1.0f),
+        new Vector3f(0.0f, 0.0f, 1.0f),
+        new Vector3f(0.0f, 0.0f, 1.0f),
+        new Vector3f(0.0f, 0.0f, 1.0f),
+
+        new Vector3f(0.0f, 1.0f, 0.0f),
+        new Vector3f(0.0f, 1.0f, 0.0f),
+        new Vector3f(0.0f, 1.0f, 0.0f),
+        new Vector3f(0.0f, 1.0f, 0.0f),
+
+
+        new Vector3f(1.0f, 0.0f, 0.0f),
+        new Vector3f(1.0f, 0.0f, 0.0f),
+        new Vector3f(1.0f, 0.0f, 0.0f),
+        new Vector3f(1.0f, 0.0f, 0.0f),
+
+        new Vector3f(-1.0f, 0.0f, 0.0f),
+        new Vector3f(-1.0f, 0.0f, 0.0f),
+        new Vector3f(-1.0f, 0.0f, 0.0f),
+        new Vector3f(-1.0f, 0.0f, 0.0f),
+
+        new Vector3f(0.0f, -1.0f, 0.0f),
+        new Vector3f(0.0f, -1.0f, 0.0f),
+        new Vector3f(0.0f, -1.0f, 0.0f),
+
+        new Vector3f(0.0f, -1.0f, 0.0f),
+
+
+        new Vector3f(0.0f, 0.0f, -1.0f),
+        new Vector3f(0.0f, 0.0f, -1.0f),
+        new Vector3f(0.0f, 0.0f, -1.0f),
+
+        new Vector3f(0.0f, 0.0f, -1.0f),
+
     };
 
     private static Vector2f[] uv = {
@@ -136,6 +173,8 @@ public class Block {
     //     20, 21, 22, 20, 22, 23
     // };
 
+    
+
     public static int[][] faceMapIndices = {
         { 0, 1, 3, 3, 1, 2,}, //front
         { 4, 5, 6, 6, 5, 7,}, //Top
@@ -166,22 +205,28 @@ public class Block {
     public Vector2i currentChunkCoordinates;
     public Vector3i blockChunkCoordinates;
     public Transform worldTransform;
+    public Boolean isInsideFrustrum = false;
+    public BlockVisibilityChange blockChange;
+    public boolean wasVisible = false;
 
     public void checkEdgeFaces() {
         Chunk c = TerrainGenerator.instance.world.get(currentChunkCoordinates);
         int x = blockChunkCoordinates.x;
         int y = blockChunkCoordinates.y;
         int z = blockChunkCoordinates.z;
+        boolean isVisible = false;
 
         if(x + 1 >= Chunk.CHUNK_WIDTH && TerrainGenerator.instance.world.containsKey(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y))) {
             Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x + 1, currentChunkCoordinates.y));
             if(nextChunk.chunk != null && nextChunk.chunk[0][y][z].type == BlockType.AIR) {
                 faces[Faces.RIGHT.index] = 1;
+                isVisible = true;
             } else {
                 faces[Faces.RIGHT.index] = 0;
             }
         }else if(x + 1 < Chunk.CHUNK_WIDTH && c.chunk[x + 1][y][z].type == BlockType.AIR) {
             faces[Faces.RIGHT.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.RIGHT.index] = 0;
         }
@@ -190,21 +235,25 @@ public class Block {
             Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x - 1, currentChunkCoordinates.y));
             if(nextChunk.chunk != null && nextChunk.chunk[15][y][z].type == BlockType.AIR) {
                 faces[Faces.LEFT.index] = 1;
+                isVisible = true;
             } else {
                 faces[Faces.LEFT.index] = 0;
             }
         } else if(x - 1 >= 0 && c.chunk[x - 1][y][z].type == BlockType.AIR) {
             faces[Faces.LEFT.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.LEFT.index] = 0;
         }
         if(y + 1 >= Chunk.CHUNK_HEIGHT || c.chunk[x][y + 1][z].type == BlockType.AIR) {
             faces[Faces.TOP.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.TOP.index] = 0;
         }
         if(y - 1 >= 0 && c.chunk[x][y - 1][z].type == BlockType.AIR) {
             faces[Faces.BOTTOM.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.BOTTOM.index] = 0;
         }
@@ -212,11 +261,13 @@ public class Block {
             Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y + 1));
             if(nextChunk.chunk != null && nextChunk.chunk[x][y][0].type == BlockType.AIR) {
                 faces[Faces.FRONT.index] = 1;
+                isVisible = true;
             } else {
                 faces[Faces.FRONT.index] = 0;
             }
         } else if(z + 1 < Chunk.CHUNK_WIDTH && c.chunk[x][y][z + 1].type == BlockType.AIR) {
             faces[Faces.FRONT.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.FRONT.index] = 0;
         }
@@ -224,13 +275,20 @@ public class Block {
             Chunk nextChunk = TerrainGenerator.instance.world.get(new Vector2i(currentChunkCoordinates.x, currentChunkCoordinates.y - 1));
             if(nextChunk.chunk != null && nextChunk.chunk[x][y][15].type == BlockType.AIR) {
                 faces[Faces.BACK.index] = 1;
+                isVisible = true;
             } else {
                 faces[Faces.BACK.index] = 0;
             }
         } else if(z - 1 >= 0 && c.chunk[x][y][z - 1].type == BlockType.AIR) {
             faces[Faces.BACK.index] = 1;
+            isVisible = true;
         } else {
             faces[Faces.BACK.index] = 0;
+        }
+
+        if(wasVisible != isVisible) {
+            wasVisible = isVisible;
+            blockChange.OnBlockVisibilityChange(this, isVisible);
         }
         
 
@@ -238,9 +296,9 @@ public class Block {
  
 
 
-    public static TexturedModel blockModel = Loader.createTexturedBlock(verticies, uv, faceMapIndices[0].length);
+    public static MaterialModel blockModel = Loader.createTexturedBlock(verticies, uv, normals, faceMapIndices[0].length);
 
-    public Block(BlockType type, Vector3i blockChunkCoordinates, Vector2i currentChunkCoordinates) {
+    public Block(BlockType type, Vector3i blockChunkCoordinates, Vector2i currentChunkCoordinates, BlockVisibilityChange change) {
         this.type = type;
         this.blockChunkCoordinates = blockChunkCoordinates;
         this.currentChunkCoordinates = currentChunkCoordinates;
@@ -253,6 +311,7 @@ public class Block {
             new Vector3f(0,0,0),
             new Vector3f(1,1,1)
             );
+        this.blockChange = change;
     }
 
 	public void checkInnerFaces() {
@@ -261,37 +320,60 @@ public class Block {
         int x = blockChunkCoordinates.x;
         int y = blockChunkCoordinates.y;
         int z = blockChunkCoordinates.z;
+        boolean isVisible = false;
+
 
         if(c.chunk[x + 1][y][z].type == BlockType.AIR) {
             faces[Faces.RIGHT.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.RIGHT.index] = 0;
         }
         if(c.chunk[x - 1][y][z].type == BlockType.AIR) {
             faces[Faces.LEFT.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.LEFT.index] = 0;
         }
         if(y + 1 >= Chunk.CHUNK_HEIGHT || c.chunk[x][y + 1][z].type == BlockType.AIR) {
             faces[Faces.TOP.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.TOP.index] = 0;
         }
         if(y - 1 >= 0 && c.chunk[x][y - 1][z].type == BlockType.AIR) {
             faces[Faces.BOTTOM.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.BOTTOM.index] = 0;
         }
         if(c.chunk[x][y][z + 1].type == BlockType.AIR) {
             faces[Faces.FRONT.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.FRONT.index] = 0;
         }
         if(c.chunk[x][y][z - 1].type == BlockType.AIR) {
             faces[Faces.BACK.index] = 1;
+            isVisible = true;
+
         } else {
             faces[Faces.BACK.index] = 0;
         }
+
+        if(wasVisible != isVisible) {
+            wasVisible = isVisible;
+            blockChange.OnBlockVisibilityChange(this, isVisible);
+        }
+	}
+
+	public void setInsideFrustum(boolean insideFrustum) {
+        this.isInsideFrustrum = insideFrustum;
 	}
 
 

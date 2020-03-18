@@ -16,10 +16,12 @@ import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Camera;
 import computergraphics.entities.Entity;
+import computergraphics.entities.Skybox;
 import computergraphics.graphics.Loader;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
 import computergraphics.graphics.Renderer;
+import computergraphics.graphics.SkyboxShader;
 import computergraphics.graphics.StaticShader;
 import computergraphics.graphics.Texture2D;
 import org.joml.Matrix4f;
@@ -40,9 +42,11 @@ public class TriangleDisplayState implements State {
 
 
     private StaticShader program;
+    private SkyboxShader skyboxProgram;
     private Renderer renderer;
 
     private Block block;
+    private Skybox skybox;
     private Camera camera;
     private TerrainGenerator terrainGenerator;
     private ThreadDataRequester threadDataRequester;
@@ -72,16 +76,25 @@ public class TriangleDisplayState implements State {
     @Override
     public void render(final float alpha) {
 
-        renderer.reset();        
-
+        renderer.reset();  
+        
+        
         program.start();
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
-
         for(Chunk c : terrainGenerator.visibleChunks) {
             renderer.render(c, program);
         }
         program.stop();
+        skyboxProgram.start();
+        Matrix4f skyboxView = camera.getViewMatrix();
+        skyboxView.m30(0);
+		skyboxView.m31(0);
+		skyboxView.m32(0);
+        skyboxProgram.loadViewMatrix(skyboxView);
+        renderer.render(skybox, skyboxProgram);
+
+        skyboxProgram.stop();
 
     }
 
@@ -91,13 +104,16 @@ public class TriangleDisplayState implements State {
         new Block(BlockType.DIRT, new Vector3i(0,0,0), new Vector2i(0,0));
         threadDataRequester = new ThreadDataRequester();
         program = new StaticShader();
+        skyboxProgram = new SkyboxShader();
 
         renderer = new Renderer();
         camera = new Camera();
         terrainGenerator = new TerrainGenerator(camera.transform());
+        skybox = new Skybox();
 
 
         renderer.initialize(program);
+        renderer.initialize(skyboxProgram);
 
 
 

@@ -103,12 +103,12 @@ public class Chunk {
     
             if(couldSee != canSee) {
                 isVisible = canSee;
-                if(canSee) {
-                    edgeFaceCheck();
-                }
                 if(visibilityChange != null) {
                     visibilityChange.OnChunkVisibilityChange(this, canSee);
                 }
+            }
+            if(canSee) {
+                edgeFaceCheck();
             }
         }
 	}

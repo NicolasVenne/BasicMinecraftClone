@@ -10,6 +10,8 @@ import computergraphics.core.Chunk;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Entity;
+import computergraphics.entities.Skybox;
+
 import org.joml.Matrix4f;
 import computergraphics.math.Transform;
 import computergraphics.models.Model;
@@ -26,6 +28,15 @@ public class Renderer {
 	private Matrix4f projectionMatrix;
 
 	public void initialize(StaticShader shader) {
+		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
+		projectionMatrix = new Matrix4f();
+		projectionMatrix.setPerspective(FOV, ratio, NEAR_PLANE, FAR_PLANE);
+		shader.start();
+		shader.loadProjectionMatrix(projectionMatrix);
+		shader.stop();
+	}
+
+	public void initialize(SkyboxShader shader) {
 		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
 		projectionMatrix = new Matrix4f();
 		projectionMatrix.setPerspective(FOV, ratio, NEAR_PLANE, FAR_PLANE);
@@ -85,6 +96,28 @@ public class Renderer {
 			glDisableVertexAttribArray(i);
 		}
 		glBindVertexArray(0);
+	}
+
+	public void render(Skybox skybox, SkyboxShader shader) {
+		Model model = skybox.getTextureModel();
+		glDisable(GL_CULL_FACE);
+		glBindVertexArray(model.getVaoID());
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glEnableVertexAttribArray(i);
+		}
+		if(model instanceof TexturedModel) {
+			TexturedModel texturedModel = (TexturedModel)model;
+			glActiveTexture(GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texturedModel.getTexture().getId());
+		}
+		Matrix4f matrix = Transform.createWorldMatrix(skybox.getPosition());
+		shader.loadTransformationMatrix(matrix);
+		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glDisableVertexAttribArray(i);
+		}
+		glBindVertexArray(0);
+		glEnable(GL_CULL_FACE);
 	}
 
 	public void render(Chunk chunk, StaticShader shader) {

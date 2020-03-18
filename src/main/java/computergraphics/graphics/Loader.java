@@ -46,6 +46,15 @@ public class  Loader {
         return new TexturedModel(vaoID, indicies.length);
     }
 
+    public static TexturedModel createTexturedModel(float[] positions, float[] uv, int[] indicies) {
+        int vaoID = generateVAO();
+        addIndicies(indicies);
+        addDataToAttribute(0, positions, 3);
+        addDataToAttribute(1, uv, 2);
+        glBindVertexArray(0);
+        return new TexturedModel(vaoID, indicies.length);
+    }
+
     public static TexturedModel createTexturedBlock(Vector3f[] positions, Vector2f[] uv, int faceLength) {
         int vaoID = generateVAO();
         addDataToAttribute(0, Utils.convertDataToFloatArray(positions), 3);

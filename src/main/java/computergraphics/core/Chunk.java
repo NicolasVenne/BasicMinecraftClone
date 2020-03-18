@@ -99,12 +99,12 @@ public class Chunk implements BlockVisibilityChange{
     
             if(couldSee != canSee) {
                 isVisible = canSee;
-                if(canSee) {
-                    edgeFaceCheck();
-                }
                 if(visibilityChange != null) {
                     visibilityChange.OnChunkVisibilityChange(this, canSee);
                 }
+            }
+            if(canSee) {
+                edgeFaceCheck();
             }
         }
 	}

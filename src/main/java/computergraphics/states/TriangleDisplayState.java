@@ -16,14 +16,19 @@ import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Camera;
 import computergraphics.entities.Entity;
+
+import computergraphics.entities.Skybox;
+
 import computergraphics.graphics.Attenuation;
 import computergraphics.graphics.DirectionalLight;
 import computergraphics.graphics.FrustumCullingFilter;
+
 import computergraphics.graphics.Loader;
 import computergraphics.graphics.PointLight;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
 import computergraphics.graphics.Renderer;
+import computergraphics.graphics.SkyboxShader;
 import computergraphics.graphics.StaticShader;
 import computergraphics.graphics.Texture2D;
 import org.joml.Matrix4f;
@@ -44,10 +49,16 @@ public class TriangleDisplayState implements State {
 
 
     private StaticShader program;
+    private SkyboxShader skyboxProgram;
     private Renderer renderer;
+
+
+    private Block block;
+    private Skybox skybox;
 
     private Block blockTest;
     private Chunk chunkTest;
+
     private Camera camera;
     private TerrainGenerator terrainGenerator;
     private ThreadDataRequester threadDataRequester;
@@ -106,17 +117,20 @@ public class TriangleDisplayState implements State {
     @Override
     public void render(final float alpha) {
 
-        renderer.reset();        
-
+        renderer.reset();  
+        
+        
         program.start();
         
 
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
+
         program.loadSpecularPower(10f);
         program.loadAmbientLight(ambientLight);
         program.loadDirectionLight(directionalLight);
         frustumFilter.updateFrustum(renderer.projectionMatrix, view);
+
         for(Chunk c : terrainGenerator.visibleChunks) {
             frustumFilter.filter(c);
 
@@ -125,6 +139,15 @@ public class TriangleDisplayState implements State {
             }
         }
         program.stop();
+        skyboxProgram.start();
+        Matrix4f skyboxView = camera.getViewMatrix();
+        skyboxView.m30(0);
+		    skyboxView.m31(0);
+		    skyboxView.m32(0);
+        skyboxProgram.loadViewMatrix(skyboxView);
+        renderer.render(skybox, skyboxProgram);
+
+        skyboxProgram.stop();
 
     }
 
@@ -149,13 +172,16 @@ public class TriangleDisplayState implements State {
  
         threadDataRequester = new ThreadDataRequester();
         program = new StaticShader();
+        skyboxProgram = new SkyboxShader();
 
         renderer = new Renderer();
         camera = new Camera();
         terrainGenerator = new TerrainGenerator(camera.transform());
+        skybox = new Skybox();
 
 
         renderer.initialize(program);
+        renderer.initialize(skyboxProgram);
 
 
 

@@ -163,6 +163,7 @@ public class Block {
     public BlockType type;
     public int[] faces = {1,1,1,1,1,1};
 
+    private boolean selected;                                      
     public Vector2i currentChunkCoordinates;
     public Vector3i blockChunkCoordinates;
     public Transform worldTransform;
@@ -236,7 +237,10 @@ public class Block {
 
     }
  
-
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+        // type = BlockType.AIR;
+    }
 
     public static TexturedModel blockModel = Loader.createTexturedBlock(verticies, uv, faceMapIndices[0].length);
 

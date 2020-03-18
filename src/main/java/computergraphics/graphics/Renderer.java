@@ -37,6 +37,29 @@ public class Renderer {
 	public void reset() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	}
+	
+	public void renderCrossHair(StaticShader shader){
+		float inc = 1.05f;
+
+		Vector3f[] vertices = {
+			// Horizontal line
+			new Vector3f(-inc, 0.0f, 1.0f),
+			new Vector3f(+inc, 0.0f, 1.0f),
+
+			// Vertical line
+			new Vector3f(0.0f, -inc, 1.0f),
+			new Vector3f(0.0f, +inc, 1.0f)
+		};
+		int[] indices = {0,1,2,3};
+
+		Model model = Loader.createModel(vertices, indices);
+		glEnableVertexAttribArray(0);
+		glDrawElements(GL_LINES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+		glDisableVertexAttribArray(0);
+
+		glBindVertexArray(0);
+
+	}
 
 	public void render(Entity entity, StaticShader shader) {
 		Model model = entity.getModel();
@@ -97,7 +120,7 @@ public class Renderer {
 					}
                 }
             }
-        }
+		}
 	}
 
 	public void initialize() {

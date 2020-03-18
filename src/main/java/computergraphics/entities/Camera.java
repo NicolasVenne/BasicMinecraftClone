@@ -94,4 +94,8 @@ public class Camera {
     public Transform transform() {
         return this.transform;
     }
+
+    public Vector3f getPosition() {
+        return transform.position;
+    }
 }

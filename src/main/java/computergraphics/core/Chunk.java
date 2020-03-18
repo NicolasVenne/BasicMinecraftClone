@@ -33,7 +33,7 @@ public class Chunk {
     public boolean initiated;
     public Block[][][] chunk;
     private VisibilityChange visibilityChange;
-    private boolean isVisible;
+    public boolean isVisible;
     private boolean chunkReceived = false;
     public boolean genereated = false;
     
@@ -56,6 +56,7 @@ public class Chunk {
                 }
             }
         }
+        
 
  
     }

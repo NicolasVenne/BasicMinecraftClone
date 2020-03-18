@@ -1,5 +1,7 @@
 package computergraphics.states;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.IntBuffer;
@@ -26,6 +28,7 @@ import org.joml.Matrix4f;
 
 import computergraphics.math.NoiseGen;
 import computergraphics.math.Transform;
+import computergraphics.entities.CameraBoxSelectionDetector;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
 import org.joml.Vector2f;
@@ -36,9 +39,6 @@ import org.joml.Vector2i;
  */
 public class TriangleDisplayState implements State {
 
-    
-
-
     private StaticShader program;
     private Renderer renderer;
 
@@ -47,7 +47,7 @@ public class TriangleDisplayState implements State {
     private TerrainGenerator terrainGenerator;
     private ThreadDataRequester threadDataRequester;
 
-
+    private CameraBoxSelectionDetector selectDetector;
     private int uniModel;
     private float previousAngle = 0f;
     private float angle = 0f;
@@ -77,13 +77,18 @@ public class TriangleDisplayState implements State {
         program.start();
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
+        renderer.renderCrossHair(program);
 
         for(Chunk c : terrainGenerator.visibleChunks) {
             renderer.render(c, program);
+            if(c.chunk != null){
+                this.selectDetector.selectBlock(c, camera);
+            }
         }
         program.stop();
-
+        
     }
+    
 
     @Override
     public void initialize() {
@@ -95,6 +100,7 @@ public class TriangleDisplayState implements State {
         renderer = new Renderer();
         camera = new Camera();
         terrainGenerator = new TerrainGenerator(camera.transform());
+        selectDetector = new CameraBoxSelectionDetector();
 
 
         renderer.initialize(program);
@@ -122,8 +128,6 @@ public class TriangleDisplayState implements State {
 
 
     }
-
-    
 
     @Override
     public void dispose() {

@@ -46,6 +46,7 @@ public class  Loader {
         return new TexturedModel(vaoID, indicies.length);
     }
 
+
     public static TexturedModel createTexturedModel(float[] positions, float[] uv, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
@@ -55,12 +56,15 @@ public class  Loader {
         return new TexturedModel(vaoID, indicies.length);
     }
 
-    public static TexturedModel createTexturedBlock(Vector3f[] positions, Vector2f[] uv, int faceLength) {
+
+    public static MaterialModel createTexturedBlock(Vector3f[] positions, Vector2f[] uv, Vector3f[] normals, int faceLength) {
+
         int vaoID = generateVAO();
         addDataToAttribute(0, Utils.convertDataToFloatArray(positions), 3);
         addDataToAttribute(1, Utils.convertDataToFloatArray(uv), 2);
+        addDataToAttribute(2, Utils.convertDataToFloatArray(normals), 3);
         glBindVertexArray(0);
-        return new TexturedModel(vaoID, faceLength);
+        return new MaterialModel(vaoID, faceLength);
 	}
 
     public static Texture2D loadTexture(String file) {
@@ -86,8 +90,11 @@ public class  Loader {
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, decoder.getWidth(), decoder.getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 

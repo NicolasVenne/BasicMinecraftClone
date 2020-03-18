@@ -1,5 +1,6 @@
 package computergraphics.models;
 
+import computergraphics.graphics.Material;
 import computergraphics.graphics.Texture2D;
 
 /**

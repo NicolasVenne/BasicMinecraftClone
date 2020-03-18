@@ -1,14 +1,21 @@
-#version 150 core
+#version 330 core
 
 in vec3 position;
 in vec2 uv;
-out vec2 pass_uv;
+in vec3 vertexNormal;
+
+out vec2 outTexCoord;
+out vec3 mvVertexNormal;
+out vec3 mvVertexPos;
 
 uniform mat4 transformationMatrix;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 
 void main() {
-    gl_Position = projectionMatrix * viewMatrix * transformationMatrix * vec4(position, 1.0);
-    pass_uv = uv;
+    vec4 mvPos = viewMatrix * transformationMatrix * vec4(position, 1.0);
+    gl_Position = projectionMatrix * mvPos;
+    outTexCoord = uv;
+    mvVertexNormal = normalize(viewMatrix * transformationMatrix * vec4(vertexNormal, 0.0)).xyz;
+    mvVertexPos = mvPos.xyz;
 }

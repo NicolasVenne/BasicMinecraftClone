@@ -3,6 +3,8 @@ package computergraphics.core;
 import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 
 import org.joml.Vector2i;
 import org.joml.Vector3f;
@@ -19,7 +21,7 @@ import computergraphics.math.VisibilityChange;
 /**
  * Chunk
  */
-public class Chunk {
+public class Chunk implements BlockVisibilityChange{
 
     public static final int CHUNK_WIDTH = 16;
     public static final int CHUNK_HEIGHT = 64;
@@ -36,29 +38,18 @@ public class Chunk {
     private boolean isVisible;
     private boolean chunkReceived = false;
     public boolean genereated = false;
+    public boolean isInsideFrustrum = false;
+    public static float borderRadius = 32f;
+    public HashSet<Block> visibleBlocks;
     
     public Chunk(Vector2i coordinates) {
         chunk = null;
+        visibleBlocks = new HashSet<Block>();
         this.coordinates = coordinates;      
         isVisible = false;  
     }
 
-    private void generateChunk() {
-        chunk = new Block[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_WIDTH];
-        for(int y = 0; y < CHUNK_HEIGHT; y++) {
-            for(int z = 0; z < CHUNK_WIDTH; z++) {
-                for(int x = 0; x < CHUNK_WIDTH; x++) {
-                    if(y <= heightMap[x][z]) {
-                        chunk[x][y][z] = new Block(BlockType.DIRT, new Vector3i(x,y,z), new Vector2i(coordinates));
-                    } else {
-                        chunk[x][y][z] = new Block(BlockType.AIR, new Vector3i(x,y,z), new Vector2i(coordinates));
-                    }
-                }
-            }
-        }
-
- 
-    }
+    
 
     public void initiate()  {
         if(this.initiated) return;
@@ -71,7 +62,8 @@ public class Chunk {
         for(int x = 1; x < CHUNK_WIDTH - 1; x++) {
             for(int y = 0; y < CHUNK_HEIGHT; y++) {
                 for(int z = 1; z < CHUNK_WIDTH - 1; z++) {
-                    chunk[x][y][z].checkInnerFaces();
+                    if(chunk[x][y][z].type != BlockType.AIR)
+                        chunk[x][y][z].checkInnerFaces();
                 }
             }
         }
@@ -80,14 +72,18 @@ public class Chunk {
     private void edgeFaceCheck() {
         for(int y = 0; y < CHUNK_HEIGHT; y++) {
             for(int z = 0; z < CHUNK_WIDTH; z++) {
-                chunk[0][y][z].checkEdgeFaces();
-                chunk[CHUNK_WIDTH - 1][y][z].checkEdgeFaces();
+                if(chunk[0][y][z].type != BlockType.AIR)
+                    chunk[0][y][z].checkEdgeFaces();
+                if(chunk[CHUNK_WIDTH - 1][y][z].type != BlockType.AIR)
+                    chunk[CHUNK_WIDTH - 1][y][z].checkEdgeFaces();
             }
         }
         for(int y = 0; y < CHUNK_HEIGHT; y++) {
             for(int x = 0; x < CHUNK_WIDTH; x++) {
-                chunk[x][y][0].checkEdgeFaces();
-                chunk[x][y][CHUNK_WIDTH - 1].checkEdgeFaces();
+                if(chunk[x][y][0].type != BlockType.AIR)
+                    chunk[x][y][0].checkEdgeFaces();
+                if(chunk[x][y][CHUNK_WIDTH - 1].type != BlockType.AIR)
+                    chunk[x][y][CHUNK_WIDTH - 1].checkEdgeFaces();
             }
         }
     }
@@ -119,7 +115,7 @@ public class Chunk {
     
     public void OnHeightMapReceived(Object heightMap) {
         this.heightMap = (float[][])heightMap;
-        ThreadDataRequester.GenerateData(() -> Chunk.GenerateBlocks(this.heightMap, coordinates), this::OnChunkReceived);
+        ThreadDataRequester.GenerateData(() -> Chunk.GenerateBlocks(this.heightMap, coordinates, this), this::OnChunkReceived);
 
     }
 
@@ -135,21 +131,29 @@ public class Chunk {
         ThreadDataRequester.GenerateData(() -> NoiseGen.getNoiseMap(CHUNK_WIDTH, CHUNK_WIDTH, 4, 0.5f, 1.4f, 100, coordinates), this::OnHeightMapReceived);
     }
     
-    public static Block[][][] GenerateBlocks(float[][] heightMap, Vector2i coordinates) {
+    public static Block[][][] GenerateBlocks(float[][] heightMap, Vector2i coordinates, BlockVisibilityChange change) {
         Block[][][] blocks = new Block[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_WIDTH];
         for(int y = 0; y < CHUNK_HEIGHT; y++) {
             for(int z = 0; z < CHUNK_WIDTH; z++) {
                 for(int x = 0; x < CHUNK_WIDTH; x++) {
                     if(y <= heightMap[x][z]) {
-                        blocks[x][y][z] = new Block(BlockType.DIRT, new Vector3i(x,y,z), new Vector2i(coordinates));
+                        blocks[x][y][z] = new Block(BlockType.DIRT, new Vector3i(x,y,z), new Vector2i(coordinates), change);
                     } else {
-                        blocks[x][y][z] = new Block(BlockType.AIR, new Vector3i(x,y,z), new Vector2i(coordinates));
+                        blocks[x][y][z] = new Block(BlockType.AIR, new Vector3i(x,y,z), new Vector2i(coordinates), change);
                     }
                 }
             }
         }
         return blocks;
 
+    }
+
+    public void OnBlockVisibilityChange(Block b, boolean visible) {
+        if(visible) {
+            visibleBlocks.add(b);
+        } else {
+            visibleBlocks.remove(b);
+        }
     }
 
     

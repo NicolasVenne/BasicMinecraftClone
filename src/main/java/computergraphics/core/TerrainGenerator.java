@@ -19,7 +19,7 @@ public class TerrainGenerator implements VisibilityChange {
 
     public static TerrainGenerator instance;
 
-    public final int viewDistance = 2;
+    public final int viewDistance = 5;
     public final float playerMoveLimitToChunkUpdate = 5f;
     public final float sqrPlayerMoveLimitToChunkUpdate = playerMoveLimitToChunkUpdate * playerMoveLimitToChunkUpdate;
 
@@ -92,8 +92,7 @@ public class TerrainGenerator implements VisibilityChange {
         if(visible) {
             visibleChunks.add(chunk);
         } else {
-            boolean worked = visibleChunks.remove(chunk);
-            System.out.println(worked);
+            visibleChunks.remove(chunk);
         }
     }
     

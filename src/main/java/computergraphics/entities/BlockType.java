@@ -2,6 +2,7 @@ package computergraphics.entities;
 
 import computergraphics.graphics.Loader;
 import computergraphics.graphics.Texture2D;
+import computergraphics.models.MaterialModel;
 import computergraphics.models.TexturedModel;
 
 /**
@@ -15,18 +16,18 @@ public enum BlockType {
     GRASS,
     DIRT;
     
-    private final TexturedModel model;
+    private final MaterialModel model;
 
     private BlockType() {
         if(this.name() == "AIR") {
             model = null;
         } else {
-            model = new TexturedModel(Block.blockModel, Loader.loadTexture(this.name()));
+            model = new MaterialModel(Block.blockModel, Loader.loadTexture(this.name()));
 
         }
     }
 
-    public TexturedModel getModel() {
+    public MaterialModel getModel() {
         return this.model;
     }
     

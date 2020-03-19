@@ -18,6 +18,8 @@ import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Camera;
 import computergraphics.entities.Entity;
+import computergraphics.entities.HUDEntity;
+import computergraphics.graphics.HUDShader;
 import computergraphics.graphics.Loader;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
@@ -31,6 +33,7 @@ import computergraphics.math.Transform;
 import computergraphics.entities.CameraBoxSelectionDetector;
 import org.joml.Vector3f;
 import org.joml.Vector3i;
+import org.joml.Vector4f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -40,6 +43,8 @@ import org.joml.Vector2i;
 public class TriangleDisplayState implements State {
 
     private StaticShader program;
+    private HUDShader hudProgram;
+    private HUDEntity crossHair;
     private Renderer renderer;
 
     private Block block;
@@ -74,10 +79,13 @@ public class TriangleDisplayState implements State {
 
         renderer.reset();        
 
+        hudProgram.start();
+        renderer.renderHUD(crossHair, hudProgram);
+        hudProgram.stop(); 
+
         program.start();
         Matrix4f view = camera.getViewMatrix();
         program.loadViewMatrix(view);
-        renderer.renderCrossHair(program);
 
         for(Chunk c : terrainGenerator.visibleChunks) {
             renderer.render(c, program);
@@ -93,9 +101,26 @@ public class TriangleDisplayState implements State {
     @Override
     public void initialize() {
 
+        float inc = 0.05f;
+
+		Vector3f[] vertices = {
+			// Horizontal line
+			new Vector3f(-inc, 0.0f, 0.0f),
+			new Vector3f(+inc, 0.0f, 0.0f),
+
+			// Vertical line
+			new Vector3f(0.0f, -inc, 0.0f),
+			new Vector3f(0.0f, +inc, 0.0f)
+		};
+		int[] indices = {0,1,2,3};
+        Vector4f color = new Vector4f(1f,1f,1f,1f);
+
+        crossHair = new HUDEntity(Loader.createModel(vertices, indices), color);
+
         new Block(BlockType.DIRT, new Vector3i(0,0,0), new Vector2i(0,0));
         threadDataRequester = new ThreadDataRequester();
         program = new StaticShader();
+        hudProgram = new HUDShader();
 
         renderer = new Renderer();
         camera = new Camera();
@@ -104,6 +129,7 @@ public class TriangleDisplayState implements State {
 
 
         renderer.initialize(program);
+        renderer.initialize(hudProgram);
 
 
 

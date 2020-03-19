@@ -4,12 +4,14 @@ import static org.lwjgl.opengl.GL30.*;
 
 import java.nio.IntBuffer;
 
-import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import computergraphics.core.Chunk;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Entity;
+import computergraphics.entities.HUDEntity;
+
 import org.joml.Matrix4f;
 import computergraphics.math.Transform;
 import computergraphics.models.Model;
@@ -24,6 +26,7 @@ public class Renderer {
 	private static final float FAR_PLANE = 1000f;
 
 	private Matrix4f projectionMatrix;
+	private Matrix4f orthoMatrix;
 
 	public void initialize(StaticShader shader) {
 		float ratio = (float) Window.getWidth() / (float) Window.getHeight();
@@ -34,32 +37,34 @@ public class Renderer {
 		shader.stop();
 	}
 
+	public void initialize(HUDShader shader) {
+		orthoMatrix = new Matrix4f();
+		orthoMatrix.identity();
+		orthoMatrix.setOrtho(-1, 1, -1, 1, 0, 1);
+		shader.start();
+		shader.loadProjectionMatrix(orthoMatrix);
+		shader.stop();
+	}
+
 	public void reset() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	}
-	
-	public void renderCrossHair(StaticShader shader){
-		float inc = 1.05f;
 
-		Vector3f[] vertices = {
-			// Horizontal line
-			new Vector3f(-inc, 0.0f, 1.0f),
-			new Vector3f(+inc, 0.0f, 1.0f),
-
-			// Vertical line
-			new Vector3f(0.0f, -inc, 1.0f),
-			new Vector3f(0.0f, +inc, 1.0f)
-		};
-		int[] indices = {0,1,2,3};
-
-		Model model = Loader.createModel(vertices, indices);
-		glEnableVertexAttribArray(0);
+	public void renderHUD(HUDEntity entity, HUDShader shader) {
+		Model model = entity.getModel();
+		glBindVertexArray(model.getVaoID());
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glEnableVertexAttribArray(i);
+		}
+		shader.setColor(new Vector4f(1f,1f,1f,1f));
 		glDrawElements(GL_LINES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
-		glDisableVertexAttribArray(0);
-
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glDisableVertexAttribArray(i);
+		}
 		glBindVertexArray(0);
-
 	}
+	
+	
 
 	public void render(Entity entity, StaticShader shader) {
 		Model model = entity.getModel();

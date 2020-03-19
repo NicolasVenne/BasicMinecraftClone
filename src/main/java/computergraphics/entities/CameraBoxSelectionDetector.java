@@ -15,6 +15,8 @@ public class CameraBoxSelectionDetector {
 
     private Vector3f dir;
 
+    private Block currentSelection;
+
     public CameraBoxSelectionDetector() {
         dir = new Vector3f();
         min = new Vector3f();
@@ -33,6 +35,7 @@ public class CameraBoxSelectionDetector {
         Block selectedBlock = null;
         float closestDistance = 5f;
         
+        //TODO Change this to loop through only visible blocks
         for(int y = 0; y < chunk.CHUNK_HEIGHT; y++) {
             for(int z = 0; z < chunk.CHUNK_WIDTH; z++) {
                 for(int x = 0; x < chunk.CHUNK_WIDTH; x++) {
@@ -48,8 +51,9 @@ public class CameraBoxSelectionDetector {
                         }
                     }
                 }
-            }
+            } 
         }
+        //TODO only proceed if current selection changes
         if (selectedBlock != null) {
             selectedBlock.setSelected(true);
             System.out.println("Selected " + selectedBlock.worldTransform.position);

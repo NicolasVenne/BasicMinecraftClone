@@ -40,6 +40,12 @@ public class Transform {
         this.rotation.z += by.z;
     }
 
+    public void rotate(float x, float y, float z) {
+        this.rotation.x += x;
+        this.rotation.y += y;
+        this.rotation.z += z;
+    }
+
     public void scale(Vector3f to) {
         this.scale.x = to.x;
         this.scale.y = to.y;

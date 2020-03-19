@@ -44,7 +44,10 @@ public class FrustumCullingFilter {
             (chunk.coordinates.y * Chunk.CHUNK_WIDTH) + Chunk.CHUNK_WIDTH
         );
         if(chunk.isInsideFrustrum) {
-            for(Block b : chunk.visibleBlocks) {
+            for(Block b : chunk.visibleEdgeBlocks) {
+                filter(b);
+            }
+            for(Block b : chunk.visibleInnerBlocks) {
                 filter(b);
             }
         }

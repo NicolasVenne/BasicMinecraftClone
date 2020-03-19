@@ -2,6 +2,7 @@ package computergraphics.core;
 
 import java.util.HashMap;
 
+
 /**
  * FiniteStateMachine
  */
@@ -31,8 +32,8 @@ public class FiniteStateMachine implements State {
     }
 
     @Override
-    public void input(float delta) {
-        currentState.input(delta);
+    public void input(float delta, MouseInput mouseInput) {
+        currentState.input(delta, mouseInput);
     }
 
     @Override

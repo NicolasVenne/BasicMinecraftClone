@@ -19,7 +19,7 @@ public class TerrainGenerator implements VisibilityChange {
 
     public static TerrainGenerator instance;
 
-    public final int viewDistance = 5;
+    public final int viewDistance = 2;
     public final float playerMoveLimitToChunkUpdate = 5f;
     public final float sqrPlayerMoveLimitToChunkUpdate = playerMoveLimitToChunkUpdate * playerMoveLimitToChunkUpdate;
 

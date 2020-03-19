@@ -4,7 +4,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import computergraphics.graphics.Loader;
-import computergraphics.graphics.ObjectLoader;
 import computergraphics.math.Transform;
 import computergraphics.models.TexturedModel;
 

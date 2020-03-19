@@ -9,14 +9,14 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 
 import computergraphics.core.Chunk;
+import computergraphics.core.MouseInput;
 import computergraphics.core.State;
 import computergraphics.core.TerrainGenerator;
 import computergraphics.core.ThreadDataRequester;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
-import computergraphics.entities.Camera;
 import computergraphics.entities.Entity;
-
+import computergraphics.entities.Player;
 import computergraphics.entities.Skybox;
 
 import computergraphics.graphics.Attenuation;
@@ -59,7 +59,7 @@ public class TriangleDisplayState implements State {
     private Block blockTest;
     private Chunk chunkTest;
 
-    private Camera camera;
+    private Player player;
     private TerrainGenerator terrainGenerator;
     private ThreadDataRequester threadDataRequester;
     private FrustumCullingFilter frustumFilter;
@@ -78,18 +78,26 @@ public class TriangleDisplayState implements State {
     private float lightAngle = -90f;
 
     @Override
-    public void input(float delta) {
+    public void input(float delta, MouseInput input) {
         // TODO Auto-generated method stub
-        camera.move(delta);
+        player.input(delta, input);
+    }
+
+    @Override
+    public void fixedUpdate() {
+        player.fixedUpdate();
+        terrainGenerator.Update();
+        threadDataRequester.Update();
     }
 
     @Override
     public void update(final float delta) {
         
+        player.update(delta);
+
         previousAngle = angle;
         angle += delta * angelPerSecond;
-        terrainGenerator.Update();
-        threadDataRequester.Update();
+        
 
         lightAngle += 1.1f * delta;
         if (lightAngle > 90) {
@@ -123,7 +131,7 @@ public class TriangleDisplayState implements State {
         program.start();
         
 
-        Matrix4f view = camera.getViewMatrix();
+        Matrix4f view = player.getViewMatrix();
         program.loadViewMatrix(view);
 
         program.loadSpecularPower(10f);
@@ -140,10 +148,10 @@ public class TriangleDisplayState implements State {
         }
         program.stop();
         skyboxProgram.start();
-        Matrix4f skyboxView = camera.getViewMatrix();
+        Matrix4f skyboxView = player.getViewMatrix();
         skyboxView.m30(0);
-		    skyboxView.m31(0);
-		    skyboxView.m32(0);
+        skyboxView.m31(0);
+        skyboxView.m32(0);
         skyboxProgram.loadViewMatrix(skyboxView);
         renderer.render(skybox, skyboxProgram);
 
@@ -155,7 +163,7 @@ public class TriangleDisplayState implements State {
     public void initialize() {
 
         blockTest = new Block(BlockType.DIRT, new Vector3i(0,0,0), new Vector2i(0,0), null);
-        
+        player = new Player();
         frustumFilter = new FrustumCullingFilter();
         ambientLight = new Vector3f(0.5f, 0.5f, 0.5f);
         Vector3f lightColour = new Vector3f(1, 0.5f, 1);
@@ -175,8 +183,7 @@ public class TriangleDisplayState implements State {
         skyboxProgram = new SkyboxShader();
 
         renderer = new Renderer();
-        camera = new Camera();
-        terrainGenerator = new TerrainGenerator(camera.transform());
+        terrainGenerator = new TerrainGenerator(Transform.zero());
         skybox = new Skybox();
 
 

@@ -1,12 +1,13 @@
 package computergraphics.core;
 
+
 /**
  * VoidState
  */
 public class VoidState implements State{
 
     @Override
-    public void input(float delta) {
+    public void input(float delta, MouseInput mouseInput) {
         // TODO Auto-generated method stub
 
     }

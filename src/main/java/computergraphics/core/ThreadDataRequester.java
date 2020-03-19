@@ -19,15 +19,18 @@ public class ThreadDataRequester {
     }
 
     public static void GenerateData(Supplier<Object> gen, Consumer<Object> callback) {
-        Thread thread = new Thread(new Runnable(){
+        // Thread thread = new Thread(new Runnable(){
         
-            @Override
-            public void run() {
-                instance.GenerateDataThread(gen, callback);
+        //     @Override
+        //     public void run() {
+        //         instance.GenerateDataThread(gen, callback);
                 
-            }
-        });
-        thread.start();
+        //     }
+        // });
+        // thread.start();
+
+        Object data = gen.get();
+        callback.accept(data);
     }
 
     private void GenerateDataThread(Supplier<Object> gen, Consumer<Object> callback) {

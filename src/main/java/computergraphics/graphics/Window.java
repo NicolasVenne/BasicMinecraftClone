@@ -23,7 +23,7 @@ public class Window {
     private final GLFWKeyCallback keyInputCallback;
     private final GLFWCursorPosCallback cursorPosCallback;
 
-
+    private static Window instance;
 
     private boolean vsync;
 
@@ -32,7 +32,7 @@ public class Window {
 
     public Window(int width, int height, CharSequence title, boolean vsync) {
         this.vsync = vsync;
-
+        instance = this;
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -86,18 +86,18 @@ public class Window {
         
             @Override
             public void invoke(long window, double xpos, double ypos) {
-                // TODO Auto-generated method stub
                 
             }
         };
         glfwSetCursorPosCallback(id, cursorPosCallback);
         glfwSetKeyCallback(id, keyInputCallback);
         glfwSetInputMode(id, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        glfwSetCursorPos(id, 0,0);
         glViewport(0,0,width,height);
-        
+    }
 
-
-
+    public static boolean isKeyPressed(int key) {
+        return glfwGetKey(instance.id, key) == GLFW_PRESS;
     }
 
     public Window(CharSequence title) {
@@ -137,6 +137,12 @@ public class Window {
 
     public boolean isVsyncOn() {
         return this.vsync;
+    }
+
+
+    
+    public long getCurrentWindow() {
+        return id;
     }
 
    

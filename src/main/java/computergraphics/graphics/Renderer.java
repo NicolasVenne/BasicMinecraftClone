@@ -10,6 +10,7 @@ import computergraphics.core.Chunk;
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.Entity;
+import computergraphics.entities.Face;
 import computergraphics.entities.Skybox;
 
 import org.joml.Matrix4f;
@@ -72,36 +73,27 @@ public class Renderer {
 
 	public void render(Block block, StaticShader shader) {
 		if(!block.isInsideFrustrum) return;
-		Model model = block.type.getModel();
-		glBindVertexArray(model.getVaoID());
-		for(int i = 0; i < shader.getAttributeCount(); i++) {
-			glEnableVertexAttribArray(i);
-		}
-
-		if(model instanceof MaterialModel) {
-			MaterialModel matModel = (MaterialModel)model;
-			glActiveTexture(GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, matModel.getMaterial().getTexture().getId());
-			shader.loadMaterial(matModel.getMaterial());
-		}
 		Matrix4f matrix = Transform.createWorldMatrix(block.worldTransform);
 		shader.loadTransformationMatrix(matrix);
-		
 		for(int i = 0; i < block.faces.length; i++) {
 			if(block.faces[i] == 1) {
-				int vbo = glGenBuffers();
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
-				IntBuffer buffer = Loader.convertToIntBuffer(Block.faceMapIndices[i]);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
+				Model model = Face.getFaceModel(i);
+				glBindVertexArray(model.getVaoID());
+				for(int j = 0; j < shader.getAttributeCount(); j++) {
+					glEnableVertexAttribArray(j);
+				}
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, block.type.getMaterial().getTexture().getId());
+				shader.loadMaterial(block.type.getMaterial());
 				glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
-				glDeleteBuffers(vbo);
+				for(int j = 0; j < shader.getAttributeCount(); j++) {
+					glDisableVertexAttribArray(j);
+				}
+				glBindVertexArray(0);
+				glBindTexture(GL_TEXTURE_2D, 0);
 			}
 		}
-		for(int i = 0; i < shader.getAttributeCount(); i++) {
-			glDisableVertexAttribArray(i);
-		}
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		
 	}
 
 	public void render(Skybox skybox, SkyboxShader shader) {
@@ -127,16 +119,12 @@ public class Renderer {
 	}
 
 	public void render(Chunk chunk, StaticShader shader) {
-		for(int y = 0; y < Chunk.CHUNK_HEIGHT; y++) {
-            for(int z = 0; z < Chunk.CHUNK_WIDTH; z++) {
-                for(int x = 0; x < Chunk.CHUNK_WIDTH; x++) {
-					if(chunk.chunk[x][y][z].type != BlockType.AIR) {
-						Block currentBlock = chunk.chunk[x][y][z];
-						render(currentBlock, shader);
-					}
-                }
-            }
-        }
+		for (Block block : chunk.visibleInnerBlocks) {
+			render(block, shader);
+		}
+		for (Block block : chunk.visibleEdgeBlocks) {
+			render(block, shader);
+		}
 	}
 
 	public void initialize() {

@@ -1,11 +1,12 @@
 package computergraphics.core;
 
+
 /**
  * State
  */
 public interface State {
 
-    public void input(float delta);
+    public void input(float delta, MouseInput mouseInput);
 
     public default void fixedUpdate() {}
 

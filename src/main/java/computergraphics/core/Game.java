@@ -3,7 +3,6 @@ package computergraphics.core;
 import org.lwjgl.glfw.*;
 import static org.lwjgl.glfw.GLFW.*;
 
-
 import computergraphics.graphics.Renderer;
 import computergraphics.graphics.Window;
 import computergraphics.states.TriangleDisplayState;
@@ -30,11 +29,14 @@ public class Game {
 
     protected GameStatus status;
 
+    protected MouseInput mouseInput;
+
     public Game() {
         status = GameStatus.INIT;
         timer = new Timer();
         renderer = new Renderer();
         state = new FiniteStateMachine();
+        mouseInput = new MouseInput();
     }
 
     public void begin() {
@@ -56,6 +58,9 @@ public class Game {
         Timer.initialize();
 
         renderer.initialize();
+        
+        mouseInput.init(window);
+        
 
         initializeStates();
 
@@ -121,7 +126,8 @@ public class Game {
     }
 
     public void input(float delta) {
-        state.input(delta);
+        mouseInput.input();
+        state.input(delta, mouseInput);
     }
 
     public void update(float delta) {

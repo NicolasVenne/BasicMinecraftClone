@@ -42,6 +42,7 @@ public class Chunk  {
     public static float borderRadius = 32f;
     public HashSet<Block> visibleInnerBlocks;
     public HashSet<Block> visibleEdgeBlocks;
+    public boolean hasCollisions;
     
     public Chunk(Vector2i coordinates) {
         chunk = null;
@@ -49,6 +50,7 @@ public class Chunk  {
      
         this.coordinates = coordinates;      
         isVisible = false;  
+        hasCollisions = false;
     }
 
     
@@ -280,9 +282,16 @@ public class Chunk  {
             Vector2i calc = new Vector2i(0,0);
             coordinates.sub(TerrainGenerator.instance.playerInChunkCoordinates, calc);
             boolean canSee = calc.length() <= TerrainGenerator.instance.viewDistance;
+            coordinates.sub(TerrainGenerator.instance.playerInChunkCoordinates, calc);
+            boolean shouldUpdateCollisions = calc.length() <= 2;
     
             if(canSee) {
-                // updateMissingFaces();
+                updateMissingFaces();
+                if(shouldUpdateCollisions) {
+                    updateCollisions();
+                } else if(hasCollisions) {
+                    removeCollisions();
+                }
             }
             
     
@@ -294,7 +303,28 @@ public class Chunk  {
             }
             
         }
-	}
+    }
+    
+    public void updateCollisions() {
+        if(!hasCollisions) {
+            for (Block block : visibleEdgeBlocks) {
+                TerrainGenerator.instance.colliders.add(block.collider);
+            }
+            for (Block block : visibleInnerBlocks) {
+                TerrainGenerator.instance.colliders.add(block.collider);
+            }
+            hasCollisions = true;
+        }
+    }
+    public void removeCollisions() {
+        for (Block block : visibleEdgeBlocks) {
+            TerrainGenerator.instance.colliders.remove(block.collider);
+        }
+        for (Block block : visibleInnerBlocks) {
+            TerrainGenerator.instance.colliders.remove(block.collider);
+        }
+        hasCollisions = false;
+    }
 
 	public void register(VisibilityChange callback) {
         visibilityChange = callback;

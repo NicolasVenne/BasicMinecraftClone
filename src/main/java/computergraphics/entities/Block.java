@@ -9,6 +9,8 @@ import computergraphics.core.BlockVisibilityChange;
 import computergraphics.core.Chunk;
 import computergraphics.core.TerrainGenerator;
 import computergraphics.graphics.Loader;
+import computergraphics.math.Box2D;
+import computergraphics.math.BoxCollider;
 import computergraphics.math.Transform;
 import computergraphics.models.MaterialModel;
 import computergraphics.models.TexturedModel;
@@ -35,6 +37,8 @@ public class Block {
     public Boolean isInsideFrustrum = false;
     public BlockVisibilityChange blockChange;
     public boolean wasVisible = false;
+    public BoxCollider collider;
+    public Box2D bounds;
 
     // public void checkEdgeFaces() {
     //     Chunk c = TerrainGenerator.instance.world.get(currentChunkCoordinates);
@@ -131,13 +135,15 @@ public class Block {
         this.currentChunkCoordinates = currentChunkCoordinates;
         this.worldTransform = new Transform(
             new Vector3f(
-                currentChunkCoordinates.x * Chunk.CHUNK_WIDTH + blockChunkCoordinates.x,
+                currentChunkCoordinates.x * (Chunk.CHUNK_WIDTH) + blockChunkCoordinates.x,
                 blockChunkCoordinates.y,
-                currentChunkCoordinates.y * Chunk.CHUNK_WIDTH + blockChunkCoordinates.z
+                currentChunkCoordinates.y * (Chunk.CHUNK_WIDTH) + blockChunkCoordinates.z
             ),
             new Vector3f(0,0,0),
             new Vector3f(1,1,1)
             );
+        this.bounds = new Box2D(blockChunkCoordinates.x, blockChunkCoordinates.y, blockChunkCoordinates.z, 1f);
+        this.collider = new BoxCollider(worldTransform.position);
         // this.blockChange = change;
     }
 

@@ -9,6 +9,7 @@ import org.joml.Vector2f;
 import org.joml.Vector2i;
 import org.joml.Vector3f;
 
+import computergraphics.math.BoxCollider;
 import computergraphics.math.Transform;
 import computergraphics.math.VisibilityChange;
 
@@ -19,11 +20,12 @@ public class TerrainGenerator implements VisibilityChange {
 
     public static TerrainGenerator instance;
 
-    public final int viewDistance = 2;
+    public final int viewDistance = 6;
     public final float playerMoveLimitToChunkUpdate = 5f;
     public final float sqrPlayerMoveLimitToChunkUpdate = playerMoveLimitToChunkUpdate * playerMoveLimitToChunkUpdate;
 
     public HashMap<Vector2i, Chunk> world;
+    public HashSet<BoxCollider> colliders;
     public List<Chunk> visibleChunks;
 
     public Transform player;
@@ -41,6 +43,7 @@ public class TerrainGenerator implements VisibilityChange {
         this.player = player;
         world = new HashMap<Vector2i, Chunk>();
         visibleChunks = new ArrayList<Chunk>();
+        colliders = new HashSet<BoxCollider>();
         playerPosition = null;
         playerPositionOld = new Vector2f(500,500);
     }

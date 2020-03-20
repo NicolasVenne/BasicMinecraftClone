@@ -85,9 +85,10 @@ public class TriangleDisplayState implements State {
 
     @Override
     public void fixedUpdate() {
-        player.fixedUpdate();
         terrainGenerator.Update();
         threadDataRequester.Update();
+        player.fixedUpdate();
+
     }
 
     @Override
@@ -183,7 +184,7 @@ public class TriangleDisplayState implements State {
         skyboxProgram = new SkyboxShader();
 
         renderer = new Renderer();
-        terrainGenerator = new TerrainGenerator(Transform.zero());
+        terrainGenerator = new TerrainGenerator(player.transform);
         skybox = new Skybox();
 
 

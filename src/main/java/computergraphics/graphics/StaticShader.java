@@ -5,6 +5,7 @@ import org.joml.Vector3f;
 
 /**
  * StaticShader
+ * The main shader for the game
  */
 public class StaticShader extends ShaderProgram{
 
@@ -30,6 +31,7 @@ public class StaticShader extends ShaderProgram{
     private int directLightColor;
     private int directLightDirection;
     private int directLightIntensity;
+    private int selectedBlock;
 
 
     public StaticShader() {
@@ -43,11 +45,19 @@ public class StaticShader extends ShaderProgram{
         super.bindAttribute(2, "vertexNormal");
     }
 
+    
+    /** 
+     * Override to return the number of attributes
+     * @return int 3 attributes
+     */
     @Override
     public int getAttributeCount() {
         return 3;
     }
 
+    /**
+     * Create all uniform locations used in the shader
+     */
     @Override
     protected void getAllUniformLocations() {
         transformMatrixLocation = super.getUniformLocation("transformationMatrix");
@@ -69,35 +79,80 @@ public class StaticShader extends ShaderProgram{
         directLightColor = super.getUniformLocation("directionalLight.colour");
         directLightDirection = super.getUniformLocation("directionalLight.direction");
         directLightIntensity = super.getUniformLocation("directionalLight.intensity");
+        selectedBlock = super.getUniformLocation("selectedBlock");
         
     }
 
+    
+    /** 
+     * Set if the shader should render the block with a blue hue
+     * @param selected boolean 
+     */
+    public void setSelectedBlock(boolean selected) {
+        super.setUniform(selectedBlock, selected ? 1.0f : 0.0f);
+    }
+
+    
+    /** 
+     * Load the transformation matrix to the shader
+     * @param matrix The transformation matrix
+     */
     public void loadTransformationMatrix(Matrix4f matrix) {
         super.setUniform(transformMatrixLocation, matrix);
     }
 
+    
+    /** 
+     * Load the projection matrix to the shader
+     * @param matrix the projection matrix
+     */
     public void loadProjectionMatrix(Matrix4f matrix) {
         super.setUniform(projectionMatrixLocation, matrix);
     } 
 
+    
+    /** 
+     * Load the view matrix to the shader
+     * @param matrix the view matrix
+     */
     public void loadViewMatrix(Matrix4f matrix) {
         super.setUniform(viewMatrixLocation, matrix);
     }
 
+    
+    /**
+     * Load the specular power to the shader 
+     * @param power the specular power
+     */
     public void loadSpecularPower(float power) {
         super.setUniform(specularPower, power);
     }
 
+    
+    /** 
+     * Load an ambient light to the shader
+     * @param value the color of the ambient light
+     */
     public void loadAmbientLight(Vector3f value) {
         super.setUniform(ambientLight, value);
     }
 
+    
+    /** 
+     * Load a direction light to the shader
+     * @param light Direction light
+     */
     public void loadDirectionLight(DirectionalLight light) {
         super.setUniform(directLightColor, light.getColor());
         super.setUniform(directLightDirection, light.getDirection());
         super.setUniform(directLightIntensity, light.getIntensity());
     }
 
+    
+    /** 
+     * Load a point light to the shader
+     * @param light Point light
+     */
     public void loadPointLight(PointLight light) {
         super.setUniform(pointLightColor, light.getColor());
         super.setUniform(pointLightPosition, light.getPosition());
@@ -108,6 +163,11 @@ public class StaticShader extends ShaderProgram{
         super.setUniform(pointLightAttExponent, att.getExponent());
     }
 
+    
+    /** 
+     * Load a material to the shader
+     * @param mat Material
+     */
     public void loadMaterial(Material mat) {
         super.setUniform(matAmbient, mat.getAmbient());
         super.setUniform(matDiffuse, mat.getDiffuse());

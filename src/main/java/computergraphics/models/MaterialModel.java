@@ -5,6 +5,7 @@ import computergraphics.graphics.Texture2D;
 
 /**
  * MaterialModel
+ * Holds a model and a material
  */
 public class MaterialModel extends Model {
 

@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 /**
  * DirectionalLight
+ * Data for a directional light
  */
 public class DirectionalLight {
     

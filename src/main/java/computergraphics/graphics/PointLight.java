@@ -4,6 +4,7 @@ import org.joml.Vector3f;
 
 /**
  * PointLight
+ * Point light data
  */
 public class PointLight {
 

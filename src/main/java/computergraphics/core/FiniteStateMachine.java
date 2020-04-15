@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 /**
  * FiniteStateMachine
+ * Handles the changing of states
  */
 public class FiniteStateMachine implements State {
 

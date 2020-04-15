@@ -3,7 +3,8 @@ package computergraphics.graphics;
 import org.joml.Matrix4f;
 
 /**
- * StaticShader
+ * SkyboxShader
+ * The shader used for the skybox
  */
 public class SkyboxShader extends ShaderProgram{
 
@@ -13,8 +14,6 @@ public class SkyboxShader extends ShaderProgram{
     private int viewMatrixLocation;
     private int transformationMatrixLocation;
     private int projectionMatrixLocation;
-    //private int textureSamplerLocation;
-    //private int ambientLightLocation;
 
     public SkyboxShader() {
         super(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
@@ -26,6 +25,10 @@ public class SkyboxShader extends ShaderProgram{
         super.bindAttribute(1, "uv");
     }
 
+    
+    /** 
+     * @return int
+     */
     @Override
     public int getAttributeCount() {
         return 2;
@@ -36,29 +39,36 @@ public class SkyboxShader extends ShaderProgram{
         viewMatrixLocation = super.getUniformLocation("viewMatrix");
         transformationMatrixLocation = super.getUniformLocation("transformationMatrix");
         projectionMatrixLocation = super.getUniformLocation("projectionMatrix");
-        //textureSamplerLocation = super.getUniformLocation("textureSampler");
-        //ambientLightLocation = super.getUniformLocation("ambientLightLocation");
     }
 
+    
+    /** 
+     * Load the view matrix into the shader
+     * @param matrix the view matrix
+     */
     public void loadViewMatrix(Matrix4f matrix) {
         super.setUniform(viewMatrixLocation, matrix);
     }
 
+    
+    /** 
+     * Load the transformation matrix into the shader
+     * @param matrix the transformation matrix
+     */
     public void loadTransformationMatrix(Matrix4f matrix) {
         super.setUniform(transformationMatrixLocation, matrix);
     }
 
+    
+    /** 
+     * load the projection matrix into the shader
+     * @param matrix the projection matrix
+     */
     public void loadProjectionMatrix(Matrix4f matrix) {
         super.setUniform(projectionMatrixLocation, matrix);
     } 
 
-    // public void loadTextureSampler() {
-    //     super.setUniform(textureSamplerLocation, 0);
-    // }
 
-    public void loadAmbientLight(Matrix4f matrix) {
-        //super.setUniform(ambientLightLocation, 0);
-    }
 	
 
     

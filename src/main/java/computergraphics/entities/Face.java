@@ -5,6 +5,7 @@ import computergraphics.models.MaterialModel;
 
 /**
  * Face
+ * Face of a block
  */
 public class Face {
 
@@ -146,10 +147,22 @@ public class Face {
 
     };
 
+    
+    /** 
+     * Get the VAO for a block face given the side
+     * @param side The face side to return
+     * @return MaterialModel The model of the face side asked for
+     */
     public static MaterialModel getFaceModel(FaceSide side) {
         return faceModels[side.index];
     }
 
+    
+    /** 
+     * Get the VAO for a block face given the side
+     * @param side The face side to return
+     * @return MaterialModel The model of the face side asked for
+     */
     public static MaterialModel getFaceModel(int side) {
         return faceModels[side];
     }

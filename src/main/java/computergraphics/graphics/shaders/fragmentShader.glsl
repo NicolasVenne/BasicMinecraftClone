@@ -44,6 +44,7 @@ uniform mat4 viewMatrix;
 uniform Material material;
 uniform PointLight pointLight;
 uniform DirectionalLight directionalLight;
+uniform float selectedBlock;
 
 
 vec4 ambientC;
@@ -114,4 +115,8 @@ void main()
     // diffuseSpecularComp += calcPointLight(pointLight, mvVertexPos, mvVertexNormal); 
     
     fragColor = ambientC * vec4(ambientLight, 1) + diffuseSpecularComp;
+
+    if ( selectedBlock > 0 ) {
+        fragColor = vec4(fragColor.x, fragColor.y, 1, 1);
+    }
 }

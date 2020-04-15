@@ -1,23 +1,14 @@
 package computergraphics.core;
 
-import java.beans.Visibility;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IntSummaryStatistics;
-import java.util.List;
 
 import org.joml.Vector2i;
-import org.joml.Vector3f;
 import org.joml.Vector3i;
-import org.lwjgl.system.CallbackI.P;
-import org.lwjgl.system.CallbackI.Z;
 
 import computergraphics.entities.Block;
 import computergraphics.entities.BlockType;
 import computergraphics.entities.FaceSide;
 import computergraphics.math.NoiseGen;
-import computergraphics.math.Transform;
 import computergraphics.math.VisibilityChange;
 
 /**
@@ -40,27 +31,195 @@ public class Chunk  {
     public boolean genereated = false;
     public boolean isInsideFrustrum = false;
     public static float borderRadius = 32f;
-    public HashSet<Block> visibleInnerBlocks;
-    public HashSet<Block> visibleEdgeBlocks;
+    public HashMap<Vector3i, Block> visibleInnerBlocks;
+    public HashMap<Vector3i, Block> visibleEdgeBlocks;
     public boolean hasCollisions;
     
     public Chunk(Vector2i coordinates) {
-        chunk = null;
-
-     
+        chunk = null;     
         this.coordinates = coordinates;      
         isVisible = false;  
         hasCollisions = false;
     }
 
     
+    /** 
+     * Break the block in the chunk at a given possition
+     * //TODO: Only breaks the inside blocks
+     * @param pos A Vector3i possition of the block in the chunk relative to the chunk (Not world space)
+     */
+    public void breakBlock(Vector3i pos) {
+        //Try to remove the block from the vissible inner blocks of the chunk
+        Block brokenInnerBlock = visibleInnerBlocks.remove(pos);
+        //If there was a block that was removed, update the chunks arround that one.
+        if(brokenInnerBlock != null) {
+            TerrainGenerator.instance.colliders.remove(brokenInnerBlock.collider);
+            chunk[pos.x][pos.y][pos.z] = 0;
+            Vector3i lookUp = new Vector3i(pos.x + 1, pos.y, pos.z); //Right
+            Block block;
+
+            //Check all sides, then update the blocks.
+            if(lookUp.x == 15) {
+                block = visibleEdgeBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.LEFT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,1,0,0});
+                    visibleEdgeBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            } else if(lookUp.x == 16) {
+                
+            } else {
+                block = visibleInnerBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.LEFT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,1,0,0});
+                    visibleInnerBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            }
+
+            lookUp = new Vector3i(pos.x - 1, pos.y, pos.z); //Right
+            if(lookUp.x == 0) {
+                block = visibleEdgeBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.RIGHT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,1,0,0,0});
+                    visibleEdgeBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            } else if(lookUp.x == -1) {
+                
+            } else {
+                block = visibleInnerBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.RIGHT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,1,0,0,0});
+                    visibleInnerBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            }
+
+            lookUp = new Vector3i(pos.x, pos.y, pos.z + 1); //Front
+            if(lookUp.z == 15) {
+                block = visibleEdgeBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.BACK.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,0,0,1});
+                    visibleEdgeBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            } else if(lookUp.z == 16) {
+                
+            } else {
+                block = visibleInnerBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.BACK.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,0,0,1});
+                    visibleInnerBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            }
+
+            lookUp = new Vector3i(pos.x, pos.y, pos.z - 1); //Front
+            if(lookUp.z == 0) {
+                block = visibleEdgeBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.FRONT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{1,0,0,0,0,0});
+                    visibleEdgeBlocks.put(temp, tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            } else if(lookUp.z == -1) {
+                
+            } else {
+                block = visibleInnerBlocks.get(lookUp);
+                if(block != null) {
+                    block.faces[FaceSide.FRONT.index] = 1;
+                } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                    Vector3i temp = new Vector3i(lookUp);
+                    Block tempBlock =  new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{1,0,0,0,0,0});
+                    visibleInnerBlocks.put(temp,tempBlock);
+                    TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                }
+            }
+
+            lookUp = new Vector3i(pos.x, pos.y + 1, pos.z); //Front
+            if(lookUp.y < CHUNK_HEIGHT) {
+                if(lookUp.z == 0 || lookUp.z == 15 || lookUp.x == 0 || lookUp.x == 15) {
+                    block = visibleEdgeBlocks.get(lookUp);
+                    if(block != null) {
+                        block.faces[FaceSide.BOTTOM.index] = 1;
+                    } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                        Vector3i temp = new Vector3i(lookUp);
+                        Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,0,1,0});
+                        visibleEdgeBlocks.put(temp, tempBlock);
+                        TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                    }
+                } else {
+                    block = visibleInnerBlocks.get(lookUp);
+                    if(block != null) {
+                        block.faces[FaceSide.BOTTOM.index] = 1;
+                    } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                        Vector3i temp = new Vector3i(lookUp);
+                        Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,0,0,0,1,0});
+                        visibleInnerBlocks.put(temp, tempBlock);
+                        TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                    }
+                }
+            }
+
+            lookUp = new Vector3i(pos.x, pos.y - 1, pos.z); //Front
+            if(lookUp.y >= 0) {
+                if(lookUp.z == 0 || lookUp.z == 15 || lookUp.x == 0 || lookUp.x == 15) {
+                    block = visibleEdgeBlocks.get(lookUp);
+                    if(block != null) {
+                        block.faces[FaceSide.TOP.index] = 1;
+                    } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                        Vector3i temp = new Vector3i(lookUp);
+                        Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,1,0,0,0,0});
+                        visibleEdgeBlocks.put(temp, tempBlock);
+                        TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                    }
+                } else {
+                    block = visibleInnerBlocks.get(lookUp);
+                    if(block != null) {
+                        block.faces[FaceSide.TOP.index] = 1;
+                    } else if(chunk[lookUp.x][lookUp.y][lookUp.z] != 0){
+                        Vector3i temp = new Vector3i(lookUp);
+                        Block tempBlock = new Block(BlockType.getTypeByID(chunk[lookUp.x][lookUp.y][lookUp.z]), temp, coordinates, new int[]{0,1,0,0,0,0});
+                        visibleInnerBlocks.put(temp, tempBlock);
+                        TerrainGenerator.instance.colliders.add(tempBlock.collider);
+                    }
+                }
+            }
+        }
+    }
+
 
     
-
-    
-
-
-    private static void calculateVisibleBlocks(int[][][] chunk, HashSet<Block> visibleEdgeBlocks, HashSet<Block> visibleInnerBlocks, Vector2i coordinates) {
+    /** 
+     * Static method to find the vissible blocks in a chunk (Those who are ajacent to air)
+     * @param chunk The chunk to check int[][][]
+     * @param visibleEdgeBlocks A HashMap of vissible blocks on the edge and their possitions
+     * @param visibleInnerBlocks A HashMap of vissible blocks on the inside and their possitions
+     * @param coordinates The Coordinates of the chunk being passed in.
+     */
+    private static void calculateVisibleBlocks(int[][][] chunk, HashMap<Vector3i, Block> visibleEdgeBlocks, HashMap<Vector3i, Block> visibleInnerBlocks, Vector2i coordinates) {
         for(int x = 1; x < CHUNK_WIDTH - 1; x++) {
             for(int y = 0; y < CHUNK_HEIGHT; y++) {
                 for(int z = 1; z < CHUNK_WIDTH - 1; z++) {
@@ -92,7 +251,8 @@ public class Chunk  {
                             isVisible = true;
                         } 
                         if(isVisible) {
-                            visibleInnerBlocks.add(new Block(BlockType.getTypeByID(chunk[x][y][z]), new Vector3i(x,y,z), coordinates, faces));
+                            Vector3i pos = new Vector3i(x,y,z);
+                            visibleInnerBlocks.put(pos, new Block(BlockType.getTypeByID(chunk[x][y][z]), pos, coordinates, faces));
                         }
                     }
                 }
@@ -126,7 +286,8 @@ public class Chunk  {
                         isVisible = true;
                     } 
                     if(isVisible) {
-                        visibleEdgeBlocks.add(new Block(BlockType.getTypeByID(chunk[0][y][z]), new Vector3i(0,y,z), coordinates, faces));
+                        Vector3i pos = new Vector3i(0,y,z);
+                        visibleEdgeBlocks.put(pos, new Block(BlockType.getTypeByID(chunk[0][y][z]), pos, coordinates, faces));
                     }
                 }
                     
@@ -154,7 +315,8 @@ public class Chunk  {
                         isVisible = true;
                     } 
                     if(isVisible) {
-                        visibleEdgeBlocks.add(new Block(BlockType.getTypeByID(chunk[CHUNK_WIDTH - 1][y][z]), new Vector3i(CHUNK_WIDTH - 1,y,z), coordinates, faces));
+                        Vector3i pos = new Vector3i(CHUNK_WIDTH - 1,y,z);
+                        visibleEdgeBlocks.put(pos, new Block(BlockType.getTypeByID(chunk[CHUNK_WIDTH - 1][y][z]), pos, coordinates, faces));
                     }
                 }
             }
@@ -185,7 +347,8 @@ public class Chunk  {
                         isVisible = true;
                     } 
                     if(isVisible) {
-                        visibleEdgeBlocks.add(new Block(BlockType.getTypeByID(chunk[x][y][0]), new Vector3i(x,y,0), coordinates, faces));
+                        Vector3i pos = new Vector3i(x,y,0);
+                        visibleEdgeBlocks.put(pos, new Block(BlockType.getTypeByID(chunk[x][y][0]), new Vector3i(x,y,0), coordinates, faces));
                     }
                 }
                     
@@ -213,17 +376,22 @@ public class Chunk  {
                         isVisible = true;
                     } 
                     if(isVisible) {
-                        visibleEdgeBlocks.add(new Block(BlockType.getTypeByID(chunk[x][y][CHUNK_WIDTH - 1]), new Vector3i(x,y,CHUNK_WIDTH - 1), coordinates, faces));
+                        Vector3i pos = new Vector3i(x,y,CHUNK_WIDTH - 1);
+                        visibleEdgeBlocks.put(pos, new Block(BlockType.getTypeByID(chunk[x][y][CHUNK_WIDTH - 1]), new Vector3i(x,y,CHUNK_WIDTH - 1), coordinates, faces));
                     }
                 }
             }
         }
     }
 
+    /**
+     * Check the chunk if any faces have not been checked vissible because
+     * of ajacent chunks not having been loaded.
+     */
     private void updateMissingFaces() {
         
         Vector2i view = new Vector2i(0,0);
-        for (Block block : visibleEdgeBlocks) {
+        for (Block block : visibleEdgeBlocks.values()) {
 
             if(block.faces[FaceSide.FRONT.index] == 0) {
                 if(block.blockChunkCoordinates.z + 1 >= Chunk.CHUNK_WIDTH) {
@@ -276,6 +444,11 @@ public class Chunk  {
         }
     }
 
+    /**
+     * Update the chunk
+     * If within the players view distance, set it vissible
+     * Will also update the collisions in the chunk
+     */
 	public void UpdateChunk() {
         if(chunkReceived) {
             boolean couldSee = isVisible;
@@ -305,37 +478,58 @@ public class Chunk  {
         }
     }
     
+    /**
+     * Add the collisions of this chunk in the global colliders to check.
+     */
     public void updateCollisions() {
         if(!hasCollisions) {
-            for (Block block : visibleEdgeBlocks) {
+            for (Block block : visibleEdgeBlocks.values()) {
                 TerrainGenerator.instance.colliders.add(block.collider);
             }
-            for (Block block : visibleInnerBlocks) {
+            for (Block block : visibleInnerBlocks.values()) {
                 TerrainGenerator.instance.colliders.add(block.collider);
             }
             hasCollisions = true;
         }
     }
+    /**
+     * Remove the collisions of this chunk in the global colliders
+     */
     public void removeCollisions() {
-        for (Block block : visibleEdgeBlocks) {
+        for (Block block : visibleEdgeBlocks.values()) {
             TerrainGenerator.instance.colliders.remove(block.collider);
         }
-        for (Block block : visibleInnerBlocks) {
+        for (Block block : visibleInnerBlocks.values()) {
             TerrainGenerator.instance.colliders.remove(block.collider);
         }
         hasCollisions = false;
     }
 
-	public void register(VisibilityChange callback) {
+	
+    /** 
+     * Register this chunk's UpdateCallback to update on visibility change.
+     * @param callback
+     */
+    public void register(VisibilityChange callback) {
         visibilityChange = callback;
     }
     
+    
+    /** 
+     * Calls when the height map was received post thread
+     * @param heightMap
+     */
     public void OnHeightMapReceived(Object heightMap) {
         this.heightMap = (float[][])heightMap;
         ThreadDataRequester.GenerateData(() -> Chunk.GenerateBlocks(this.heightMap, coordinates), this::OnChunkReceived);
 
     }
 
+    
+    /** 
+     * Calls when the chunk has been generated
+     * @param chunk
+     */
     public void OnChunkReceived(Object chunk) {
         ChunkData data = (ChunkData)chunk;
         this.chunk = data.blocks;
@@ -346,21 +540,35 @@ public class Chunk  {
 
     }
 
-	public void load() {                                                                        //4, 0.7f, 1.7f, 100
+	
+    /** 
+     * Load this chunk
+     */
+    public void load() {                                                                        //4, 0.7f, 1.7f, 100
         ThreadDataRequester.GenerateData(() -> NoiseGen.getNoiseMap(CHUNK_WIDTH, CHUNK_WIDTH, 5, 0.8f, 2f, 400, coordinates), this::OnHeightMapReceived);
     }
     
+    
+    /** 
+     * @param heightMap The height map to generate the chunk
+     * @param coordinates The coordinates of this chunk in chunk coordinate space
+     * @return ChunkData object that has the vissible blocks and block type array
+     */
     public static ChunkData GenerateBlocks(float[][] heightMap, Vector2i coordinates) {
         int[][][] blocks = new int[CHUNK_WIDTH][CHUNK_HEIGHT][CHUNK_WIDTH];
-        HashSet<Block> visibleEdgeBlocks = new HashSet<Block>();
-        HashSet<Block> visibleInnerBlocks = new HashSet<Block>();
-        for(int y = 0; y < CHUNK_HEIGHT; y++) {
+        HashMap<Vector3i, Block> visibleEdgeBlocks = new HashMap<Vector3i, Block>();
+        HashMap<Vector3i, Block> visibleInnerBlocks = new HashMap<Vector3i, Block>();
+
+
+        for(int x = 0; x < CHUNK_WIDTH; x++) {
             for(int z = 0; z < CHUNK_WIDTH; z++) {
-                for(int x = 0; x < CHUNK_WIDTH; x++) {
-                    if(y <= heightMap[x][z]) {
+                for(int y = 0; y <= heightMap[x][z]; y++) {
+                    if(y < heightMap[x][z] - 4) {
+                        blocks[x][y][z] = BlockType.STONE.getID();
+                    } else if(y <= heightMap[x][z] - 1) {
                         blocks[x][y][z] = BlockType.DIRT.getID();
-                    } else {
-                        blocks[x][y][z] = BlockType.AIR.getID();
+                    } else if(y <= heightMap[x][z]) {
+                        blocks[x][y][z] = BlockType.GRASS.getID();
                     }
                 }
             }
@@ -371,13 +579,16 @@ public class Chunk  {
         return new ChunkData(visibleEdgeBlocks, visibleInnerBlocks, blocks);
 
     }
-
+    /**
+     * ChunkData
+     * Holds the data for a given chunk.
+     */
     public static class ChunkData {
-        public HashSet<Block> visibleEdgeBlocks;
-        public HashSet<Block> visibleInnerBlocks;
+        public HashMap<Vector3i, Block> visibleEdgeBlocks;
+        public HashMap<Vector3i, Block> visibleInnerBlocks;
         public int[][][] blocks;
 
-        public ChunkData(HashSet<Block> visibleEdgeBlocks, HashSet<Block> visibleInnerBlocks, int[][][] blocks) {
+        public ChunkData(HashMap<Vector3i, Block> visibleEdgeBlocks, HashMap<Vector3i, Block> visibleInnerBlocks, int[][][] blocks) {
             this.visibleEdgeBlocks = visibleEdgeBlocks;
             this.visibleInnerBlocks = visibleInnerBlocks;
             this.blocks = blocks;

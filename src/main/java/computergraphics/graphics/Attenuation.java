@@ -2,6 +2,7 @@ package computergraphics.graphics;
 
 /**
  * Attenuation
+ * Attenuation data for a light
  */
 public class Attenuation {
 

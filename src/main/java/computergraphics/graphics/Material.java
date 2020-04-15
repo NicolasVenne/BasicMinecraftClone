@@ -4,6 +4,7 @@ import org.joml.Vector4f;
 
 /**
  * Material
+ * Material data for lighting and texture of model
  */
 public class Material {
 

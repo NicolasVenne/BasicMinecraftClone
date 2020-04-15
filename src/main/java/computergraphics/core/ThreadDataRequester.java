@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 /**
  * ThreadDataRequester
+ * Thread manager to request data off the main thread
+ * CURRENTLY DISABLED
  */
 public class ThreadDataRequester {
 
@@ -18,6 +20,12 @@ public class ThreadDataRequester {
         threadQueue = new LinkedList<DataThread>();
     }
 
+    
+    /** 
+     * Run the given generate method and return the result while run on a different thread
+     * @param gen The generate method
+     * @param callback THe callback method
+     */
     public static void GenerateData(Supplier<Object> gen, Consumer<Object> callback) {
         // Thread thread = new Thread(new Runnable(){
         
@@ -33,6 +41,12 @@ public class ThreadDataRequester {
         callback.accept(data);
     }
 
+    
+    /** 
+     * The actual method that is run on a seperate thread.
+     * @param gen
+     * @param callback
+     */
     private void GenerateDataThread(Supplier<Object> gen, Consumer<Object> callback) {
         Object data = gen.get();
         synchronized(threadQueue) {
@@ -40,6 +54,10 @@ public class ThreadDataRequester {
         }
     }
 
+    /**
+     * Update method called by game loop
+     * Check queue for threads that are finish and dequeue them
+     */
     public void Update() {
         if(threadQueue.size() > 0) {
             for(int i = 0; i < threadQueue.size(); i++) {
@@ -49,6 +67,9 @@ public class ThreadDataRequester {
         }
     }
 
+    /**
+     * Holds data for the threads.
+     */
     private class DataThread {
         public Consumer<Object> callback;
         public Object data;

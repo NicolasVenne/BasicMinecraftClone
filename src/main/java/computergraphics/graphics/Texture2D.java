@@ -2,6 +2,7 @@ package computergraphics.graphics;
 
 /**
  * Texture2D
+ * Texture data
  */
 public class Texture2D {
 
@@ -14,9 +15,5 @@ public class Texture2D {
     public int getId() {
         return id;
     }
-
-    
-
-
     
 }

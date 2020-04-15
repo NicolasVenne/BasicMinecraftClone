@@ -1,0 +1,101 @@
+Date : 2020-03-20 18:03:53
+Directory : c:\Users\Nicolas\Documents\minecraftclone
+Total : 60 files,  7703 codes, 390 comments, 1414 blanks, all 9507 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Java     |         48 |      4,751 |        380 |      1,069 |      6,200 |
+| Log      |          7 |      2,386 |          0 |        301 |      2,687 |
+| XML      |          1 |        433 |          5 |         13 |        451 |
+| GLSL     |          4 |        133 |          5 |         31 |        169 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                   |         60 |      7,703 |        390 |      1,414 |      9,507 |
+| src                                                                                                                 |         52 |      4,884 |        385 |      1,100 |      6,369 |
+| src\main                                                                                                            |         51 |      4,873 |        379 |      1,096 |      6,348 |
+| src\main\java                                                                                                       |         51 |      4,873 |        379 |      1,096 |      6,348 |
+| src\main\java\computergraphics                                                                                      |         51 |      4,873 |        379 |      1,096 |      6,348 |
+| src\main\java\computergraphics\core                                                                                 |         12 |        926 |         52 |        229 |      1,207 |
+| src\main\java\computergraphics\entities                                                                             |          7 |        534 |         62 |        161 |        757 |
+| src\main\java\computergraphics\graphics                                                                             |         19 |      1,124 |         61 |        328 |      1,513 |
+| src\main\java\computergraphics\graphics\shaders                                                                     |          4 |        133 |          5 |         31 |        169 |
+| src\main\java\computergraphics\math                                                                                 |          8 |      2,070 |        176 |        274 |      2,520 |
+| src\main\java\computergraphics\models                                                                               |          3 |         65 |          9 |         32 |        106 |
+| src\main\java\computergraphics\states                                                                               |          1 |        146 |         19 |         64 |        229 |
+| src\test                                                                                                            |          1 |         11 |          6 |          4 |         21 |
+| src\test\java                                                                                                       |          1 |         11 |          6 |          4 |         21 |
+| src\test\java\computergraphics                                                                                      |          1 |         11 |          6 |          4 |         21 |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                            | language | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid18580.log                                                       | Log      |        269 |          0 |         43 |        312 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid20888.log                                                       | Log      |        269 |          0 |         43 |        312 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid23620.log                                                       | Log      |        393 |          0 |         43 |        436 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid27296.log                                                       | Log      |        396 |          0 |         43 |        439 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid27988.log                                                       | Log      |        269 |          0 |         43 |        312 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid28764.log                                                       | Log      |        393 |          0 |         43 |        436 |
+| c:\Users\Nicolas\Documents\minecraftclone\hs_err_pid34212.log                                                       | Log      |        397 |          0 |         43 |        440 |
+| c:\Users\Nicolas\Documents\minecraftclone\pom.xml                                                                   | XML      |        433 |          5 |         13 |        451 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\App.java                                   | Java     |          8 |          0 |          8 |         16 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\Action.java                           | Java     |          4 |          3 |          2 |          9 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\BlockVisibilityChange.java            | Java     |          5 |          0 |          3 |          8 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\Chunk.java                            | Java     |        494 |         15 |         52 |        561 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\FiniteStateMachine.java               | Java     |         46 |          3 |         14 |         63 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\Game.java                             | Java     |        104 |          3 |         51 |        158 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\GameStatus.java                       | Java     |         14 |          0 |          6 |         20 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\MouseInput.java                       | Java     |         66 |          0 |         23 |         89 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\State.java                            | Java     |         12 |          3 |         11 |         26 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\TerrainGenerator.java                 | Java     |         77 |          4 |         21 |        102 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\ThreadDataRequester.java              | Java     |         39 |         10 |         12 |         61 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\Timer.java                            | Java     |         47 |          3 |         21 |         71 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\core\VoidState.java                        | Java     |         18 |          8 |         13 |         39 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\Block.java                        | Java     |         52 |          4 |         30 |         86 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\BlockType.java                    | Java     |         36 |          3 |         12 |         51 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\Entity.java                       | Java     |         24 |          3 |         11 |         38 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\Face.java                         | Java     |        142 |          3 |         13 |        158 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\FaceSide.java                     | Java     |         13 |          0 |          4 |         17 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\Player.java                       | Java     |        182 |         25 |         53 |        260 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\entities\Skybox.java                       | Java     |         85 |         24 |         38 |        147 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Attenuation.java                  | Java     |         29 |          3 |         10 |         42 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\DirectionalLight.java             | Java     |         33 |          3 |         13 |         49 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\FrustumCullingFilter.java         | Java     |         47 |          5 |         13 |         65 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Loader.java                       | Java     |        132 |          3 |         37 |        172 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Material.java                     | Java     |         66 |          3 |         22 |         91 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\PointLight.java                   | Java     |         48 |          3 |         17 |         68 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Renderer.java                     | Java     |        121 |          3 |         21 |        145 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Shader.java                       | Java     |         52 |          3 |         16 |         71 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\ShaderProgram.java                | Java     |        136 |          3 |         38 |        177 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\SkyboxShader.java                 | Java     |         38 |         11 |         17 |         66 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\StaticShader.java                 | Java     |        102 |          3 |         23 |        128 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Texture2D.java                    | Java     |         10 |          3 |          9 |         22 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\VertexArray.java                  | Java     |         35 |          3 |         12 |         50 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\VertexBuffer.java                 | Java     |         33 |          3 |         13 |         49 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\Window.java                       | Java     |        109 |          4 |         36 |        149 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\shaders\fragmentShader.glsl       | GLSL     |         96 |          5 |         21 |        122 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\shaders\skyboxFragmentShader.glsl | GLSL     |          8 |          0 |          3 |         11 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\shaders\skyboxVertexShader.glsl   | GLSL     |         12 |          0 |          3 |         15 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\graphics\shaders\vertexShader.glsl         | GLSL     |         17 |          0 |          4 |         21 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\Box2D.java                            | Java     |         24 |          3 |          9 |         36 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\BoxCollider.java                      | Java     |         46 |          3 |         14 |         63 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\NoiseGen.java                         | Java     |         47 |          3 |         17 |         67 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\OpenSimplexNoise.java                 | Java     |      1,795 |        155 |        189 |      2,139 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\Transform.java                        | Java     |         50 |          3 |         17 |         70 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\Utils.java                            | Java     |         22 |          3 |          3 |         28 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\Vector4.java                          | Java     |         81 |          3 |         22 |        106 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\math\VisibilityChange.java                 | Java     |          5 |          3 |          3 |         11 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\models\MaterialModel.java                  | Java     |         19 |          3 |          9 |         31 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\models\Model.java                          | Java     |         19 |          3 |         11 |         33 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\models\TexturedModel.java                  | Java     |         27 |          3 |         12 |         42 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\main\java\computergraphics\states\TriangleDisplayState.java           | Java     |        146 |         19 |         64 |        229 |
+| c:\Users\Nicolas\Documents\minecraftclone\src\test\java\computergraphics\AppTest.java                               | Java     |         11 |          6 |          4 |         21 |
+| Total                                                                                                               |          |      7,703 |        390 |      1,414 |      9,507 |
++---------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

@@ -7,7 +7,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.joml.Vector2f;
@@ -22,6 +21,7 @@ import de.matthiasmann.twl.utils.PNGDecoder;
 
 /**
  * Loader
+ * Used to create VAO's for models
  */
 public class  Loader {
 
@@ -29,6 +29,13 @@ public class  Loader {
     private static List<Integer> vbos = new ArrayList<Integer>();
     private static List<Integer> textures = new ArrayList<Integer>();
 
+    
+    /** 
+     * Create a basic model given the vertexs and indicies
+     * @param positions The vertices
+     * @param indicies The indicies
+     * @return Model
+     */
     public static Model createModel(Vector3f[] positions, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
@@ -37,6 +44,14 @@ public class  Loader {
         return new Model(vaoID, indicies.length);
     }
 
+    
+    /** 
+     * Create a textured model
+     * @param positions The vertices
+     * @param uv The uv coordinates
+     * @param indicies The indicies
+     * @return TexturedModel
+     */
     public static TexturedModel createTexturedModel(Vector3f[] positions, Vector2f[] uv, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
@@ -47,6 +62,14 @@ public class  Loader {
     }
 
 
+    
+    /** 
+     * Create a textured model using float arrays
+     * @param positions The vertices as float array
+     * @param uv The uv coordinates as float array
+     * @param indicies The indicies 
+     * @return TexturedModel
+     */
     public static TexturedModel createTexturedModel(float[] positions, float[] uv, int[] indicies) {
         int vaoID = generateVAO();
         addIndicies(indicies);
@@ -57,6 +80,15 @@ public class  Loader {
     }
 
 
+    
+    /** 
+     * Create a material model for block faces
+     * @param positions The vertices
+     * @param uv THe uv coordinates
+     * @param normals the normals
+     * @param faceLength Number of verticies in a block face
+     * @return MaterialModel
+     */
     public static MaterialModel createMaterialModel(Vector3f[] positions, Vector2f[] uv, Vector3f[] normals, int faceLength) {
 
         int vaoID = generateVAO();
@@ -67,6 +99,15 @@ public class  Loader {
         return new MaterialModel(vaoID, faceLength);
     }
 
+    
+    /** 
+     * Create a material model
+     * @param positions The vertices
+     * @param uv the uv coordinates
+     * @param normals the normals
+     * @param indicies the indicies
+     * @return MaterialModel
+     */
     public static MaterialModel createMaterialModel(float[] positions, float[] uv, float[] normals, int[] indicies) {
 
         int vaoID = generateVAO();
@@ -79,6 +120,12 @@ public class  Loader {
     }
 
 
+    
+    /** 
+     * Load a texture given a image file path
+     * @param file Image file path
+     * @return Texture2D
+     */
     public static Texture2D loadTexture(String file) {
         PNGDecoder decoder = null;
         ByteBuffer buffer = null;
@@ -115,6 +162,9 @@ public class  Loader {
         return new Texture2D(id);
     }
 
+    /**
+     * Clear all VAO's and VBO's
+     */
     public static void dispose() {
         for (int vao : vaos) {
 			glDeleteVertexArrays(vao);
@@ -127,6 +177,13 @@ public class  Loader {
         }
     }
 
+    
+    /** 
+     * Load data to a VBO
+     * @param index index of VBO
+     * @param data data to load
+     * @param size size of data
+     */
     private static void addDataToAttribute(int index, float[] data, int size) {
         int vbo = glGenBuffers();
         vbos.add(vbo);
@@ -137,6 +194,11 @@ public class  Loader {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
+    
+    /** 
+     * Add the indicies to the current VAO
+     * @param indicies
+     */
     private static void addIndicies(int[] indicies) {
         int vbo = glGenBuffers();
         vbos.add(vbo);
@@ -145,6 +207,12 @@ public class  Loader {
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, buffer, GL_STATIC_DRAW);
     }
 
+    
+    /** 
+     * Convert int array to buffer
+     * @param data THe int array
+     * @return IntBuffer
+     */
     public static IntBuffer convertToIntBuffer(int[] data) {
         IntBuffer buffer = BufferUtils.createIntBuffer(data.length);
         buffer.put(data);
@@ -152,6 +220,12 @@ public class  Loader {
         return buffer;
     }
 
+    
+    /** 
+     * Conver float array to buffer
+     * @param data THe float array
+     * @return FloatBuffer
+     */
     private static FloatBuffer convertToFloatBuffer(float[] data) {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
         buffer.put(data);
@@ -159,6 +233,11 @@ public class  Loader {
         return buffer;
     }
 
+    
+    /** 
+     * Create a VAO
+     * @return int
+     */
     private static int generateVAO() {
         int vaoID = glGenVertexArrays();
         vaos.add(vaoID);

@@ -3,6 +3,7 @@ package computergraphics.core;
 
 /**
  * State
+ * Interface of methods for a state
  */
 public interface State {
 

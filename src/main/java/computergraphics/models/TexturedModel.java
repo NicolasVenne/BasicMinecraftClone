@@ -1,10 +1,10 @@
 package computergraphics.models;
 
-import computergraphics.graphics.Material;
 import computergraphics.graphics.Texture2D;
 
 /**
  * TexturedModel
+ * Holds the texture and a model
  */
 public class TexturedModel extends Model{
 

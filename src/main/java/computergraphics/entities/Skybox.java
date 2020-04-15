@@ -7,6 +7,10 @@ import computergraphics.graphics.Loader;
 import computergraphics.math.Transform;
 import computergraphics.models.TexturedModel;
 
+/**
+ * The skybox of the game
+ * Just a cube rendered in the middle of the players view with a texture on the inside
+ */
 public class Skybox{
     private static Vector3f[] verticies = {
         //Front  0, 1, 3, 3, 1, 2, -> 0, 1, 3, 3, 1, 2,
@@ -79,10 +83,12 @@ public class Skybox{
         new Vector2f(0.25f, 0.3334333333f),
 
         //Bottom
-        new Vector2f(0.25f, 0.666766666666f),
-        new Vector2f(0.25f, 1f),
         new Vector2f(0.5f, 1f),
         new Vector2f(0.5f, 0.666766666666f),
+        new Vector2f(0.25f, 0.666766666666f),
+        new Vector2f(0.25f, 1f),
+        
+        
 
         //back
         
@@ -132,14 +138,5 @@ public class Skybox{
     public Transform getPosition(){
         return this.position;
     }
-
-    // private static TexturedModel model;
-    // private static Transform position;
-
-    // public Skybox(String objModel, String textureFile) throws Exception{
-    //     this.model = new TexturedModel(ObjectLoader.loadMesh(objModel), Loader.loadTexture(textureFile));
-    //     this.position = new Transform(new Vector3f(0,30,-1f),new Vector3f(0,0,0),new Vector3f(1,1,1));
-    // }
-
 
 }

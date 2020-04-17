@@ -26,7 +26,7 @@ public class Chunk  {
     public boolean initiated;
     public int[][][] chunk;
     private VisibilityChange visibilityChange;
-    private boolean isVisible;
+    public boolean isVisible;
     private boolean chunkReceived = false;
     public boolean genereated = false;
     public boolean isInsideFrustrum = false;

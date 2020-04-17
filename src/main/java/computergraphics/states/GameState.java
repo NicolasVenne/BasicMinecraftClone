@@ -1,20 +1,18 @@
 package computergraphics.states;
 
-
-
-
 import computergraphics.core.Chunk;
 import computergraphics.core.MouseInput;
 import computergraphics.core.State;
 import computergraphics.core.TerrainGenerator;
 import computergraphics.core.ThreadDataRequester;
+import computergraphics.entities.HUDEntity;
 import computergraphics.entities.Player;
 import computergraphics.entities.Skybox;
 
 import computergraphics.graphics.Attenuation;
 import computergraphics.graphics.DirectionalLight;
 import computergraphics.graphics.FrustumCullingFilter;
-
+import computergraphics.graphics.HUDShader;
 import computergraphics.graphics.Loader;
 import computergraphics.graphics.PointLight;
 import computergraphics.graphics.Renderer;
@@ -23,6 +21,7 @@ import computergraphics.graphics.StaticShader;
 import org.joml.Matrix4f;
 
 import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 /**
  * GameState
@@ -32,6 +31,8 @@ public class GameState implements State {
 
     private StaticShader program;
     private SkyboxShader skyboxProgram;
+    private HUDShader hudProgram;
+    private HUDEntity crossHair;
     private Renderer renderer;
     private Skybox skybox;
     private Player player;
@@ -92,6 +93,10 @@ public class GameState implements State {
     public void render(final float alpha) {
 
         renderer.reset();  
+
+        hudProgram.start();
+        renderer.renderHUD(crossHair, hudProgram);
+        hudProgram.stop(); 
         
         program.start();
         Matrix4f view = player.getViewMatrix();
@@ -134,6 +139,24 @@ public class GameState implements State {
         player = new Player();
         frustumFilter = new FrustumCullingFilter();
 
+        //Create the crosshair model
+        float inc = 0.05f;
+
+        Vector3f[] vertices = {
+			// Horizontal line
+			new Vector3f(-inc, 0.0f, 0.0f),
+			new Vector3f(+inc, 0.0f, 0.0f),
+
+			// Vertical line
+			new Vector3f(0.0f, -inc, 0.0f),
+			new Vector3f(0.0f, +inc, 0.0f)
+		};
+		int[] indices = {0,1,2,3};
+        Vector4f color = new Vector4f(1f,1f,1f,1f);
+
+        crossHair = new HUDEntity(Loader.createModel(vertices, indices), color);
+
+
         //Lighting
         ambientLight = new Vector3f(0.5f, 0.5f, 0.5f);
         Vector3f lightColour = new Vector3f(1, 0.5f, 1);
@@ -152,6 +175,7 @@ public class GameState implements State {
         //Create the shader programs
         program = new StaticShader();
         skyboxProgram = new SkyboxShader();
+        hudProgram = new HUDShader();
 
         //Create renderer
         renderer = new Renderer();
@@ -165,6 +189,7 @@ public class GameState implements State {
         //Initialize the shader programs
         renderer.initialize(program);
         renderer.initialize(skyboxProgram);
+        renderer.initialize(hudProgram);
     }
 
     @Override

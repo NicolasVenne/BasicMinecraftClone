@@ -128,9 +128,7 @@ public class Game {
 
             //Update the current state.
             update(delta);
-            System.out.print(delta + " ");
 
-            System.out.println(Timer.getFPS());
             //Update the timer for delta time.
             Timer.nextFrame();
 

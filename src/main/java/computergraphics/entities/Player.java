@@ -90,8 +90,9 @@ public class Player {
             max.set(collider.origin.x, collider.origin.y, collider.origin.z);
             min.add(-collider.size.x, -collider.size.y, -collider.size.z);
             max.add(collider.size.x, collider.size.y, collider.size.z);
-
-            if (Intersectionf.intersectRayAab(transform.position, direction, min, max, nearFar) && nearFar.x < distance) {
+            Vector3f temp = new Vector3f(transform.position);
+            temp.y += 0.5f;
+            if (Intersectionf.intersectRayAab(temp, direction, min, max, nearFar) && nearFar.x < distance) {
                 distance = nearFar.x;
                 tempSelectBlock = (Block)collider.parent;
 

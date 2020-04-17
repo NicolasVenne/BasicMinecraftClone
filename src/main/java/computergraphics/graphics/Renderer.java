@@ -6,8 +6,11 @@ import computergraphics.core.Chunk;
 import computergraphics.entities.Block;
 import computergraphics.entities.Face;
 import computergraphics.entities.Skybox;
+import computergraphics.entities.HUDEntity;
 
 import org.joml.Matrix4f;
+import org.joml.Vector4f;
+
 import computergraphics.math.Transform;
 import computergraphics.models.Model;
 import computergraphics.models.TexturedModel;
@@ -22,6 +25,7 @@ public class Renderer {
 	private static final float FAR_PLANE = 1000f;
 
 	public Matrix4f projectionMatrix;
+	private Matrix4f orthoMatrix;
 
 	
 	/** 
@@ -34,6 +38,15 @@ public class Renderer {
 		projectionMatrix.setPerspective(FOV, ratio, NEAR_PLANE, FAR_PLANE);
 		shader.start();
 		shader.loadProjectionMatrix(projectionMatrix);
+		shader.stop();
+	}
+
+	public void initialize(HUDShader shader) {
+		orthoMatrix = new Matrix4f();
+		orthoMatrix.identity();
+		orthoMatrix.setOrtho(-1, 1, -1, 1, 0, 1);
+		shader.start();
+		shader.loadProjectionMatrix(orthoMatrix);
 		shader.stop();
 	}
 
@@ -58,7 +71,19 @@ public class Renderer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);	
 	}
 
-	
+	public void renderHUD(HUDEntity entity, HUDShader shader) {
+		Model model = entity.getModel();
+		glBindVertexArray(model.getVaoID());
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glEnableVertexAttribArray(i);
+		}
+		shader.setColor(new Vector4f(1f,1f,1f,1f));
+		glDrawElements(GL_LINES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+		for(int i = 0; i < shader.getAttributeCount(); i++) {
+			glDisableVertexAttribArray(i);
+		}
+		glBindVertexArray(0);
+	}
 
 	
 	/** 

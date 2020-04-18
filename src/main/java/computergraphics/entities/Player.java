@@ -55,6 +55,7 @@ public class Player {
     private static float selectDistance = 8;
     private boolean clicked = false;
     private boolean breakBlock = false;
+    private boolean reset = false;
 
 
 
@@ -122,6 +123,13 @@ public class Player {
             velocity.y = JUMP_FORCE;
             jumping = true;
             jump = false;
+
+        }
+
+        if(reset) {
+            reset = false;
+            velocity.y = 0;
+            transform.position.y = 60f;
 
         }
 
@@ -204,6 +212,12 @@ public class Player {
 
         if(Window.isKeyPressed(GLFW_KEY_S)) {
             moveDirection.z = -1;
+        }
+
+        if(Window.isKeyPressed(GLFW_KEY_R)) {
+            if(!reset) {
+                reset = true;
+            }
         }
 
         if(Window.isKeyPressed(GLFW_KEY_SPACE) && grounded) {

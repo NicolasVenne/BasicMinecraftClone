@@ -4,6 +4,7 @@ package computergraphics.models;
 
 /**
  * Model
+ * Holds the vao and vertex count for a model
  */
 public class Model {
 

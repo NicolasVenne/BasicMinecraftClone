@@ -8,8 +8,8 @@ import org.joml.Vector4f;
  */
 public class HUDShader extends ShaderProgram{
 
-    private static final String VERTEX_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/vertexHUDShader.glsl";
-    private static final String FRAGMENT_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/fragmentHUDShader.glsl";
+    private static final String VERTEX_SHADER_FILE = "shaders/vertexHUDShader.glsl";
+    private static final String FRAGMENT_SHADER_FILE = "shaders/fragmentHUDShader.glsl";
 
     private int transformMatrixLocation;
     private int projectionMatrixLocation;

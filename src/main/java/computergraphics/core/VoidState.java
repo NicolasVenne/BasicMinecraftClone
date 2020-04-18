@@ -1,37 +1,34 @@
 package computergraphics.core;
 
+
 /**
  * VoidState
+ * An empty state, used for initialization
  */
 public class VoidState implements State{
 
     @Override
-    public void input(float delta) {
-        // TODO Auto-generated method stub
+    public void input(float delta, MouseInput mouseInput) {
 
     }
 
     @Override
     public void render(float alpha) {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void dispose() {
-        // TODO Auto-generated method stub
 
     }
 
     @Override
     public void update(float delta) {
-        // TODO Auto-generated method stub
 
     }
 

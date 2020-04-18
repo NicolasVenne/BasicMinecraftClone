@@ -130,7 +130,7 @@ public class  Loader {
         PNGDecoder decoder = null;
         ByteBuffer buffer = null;
         try {
-            decoder = new PNGDecoder(new FileInputStream("res/" + file + ".png"));
+            decoder = new PNGDecoder(Loader.class.getClassLoader().getResourceAsStream(file + ".png"));
             buffer = ByteBuffer.allocateDirect(4 * decoder.getWidth() * decoder.getHeight());
             decoder.decode(buffer, decoder.getWidth() * 4, PNGDecoder.Format.RGBA);
         } catch (FileNotFoundException e) {

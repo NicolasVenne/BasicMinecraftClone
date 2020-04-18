@@ -9,8 +9,8 @@ import org.joml.Vector3f;
  */
 public class StaticShader extends ShaderProgram{
 
-    private static final String VERTEX_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/vertexShader.glsl";
-    private static final String FRAGMENT_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/fragmentShader.glsl";
+    private static final String VERTEX_SHADER_FILE = "shaders/vertexShader.glsl";
+    private static final String FRAGMENT_SHADER_FILE = "shaders/fragmentShader.glsl";
 
     private int transformMatrixLocation;
     private int projectionMatrixLocation;

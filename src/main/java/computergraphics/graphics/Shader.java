@@ -86,7 +86,7 @@ public class Shader {
     public static Shader createShaderFromFile(int type, String path) {
         StringBuilder builder = new StringBuilder();
 
-        try (InputStream file = new FileInputStream(path);
+        try (InputStream file = Shader.class.getClassLoader().getResourceAsStream(path);
                 BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {
             String line;
             while((line = reader.readLine()) != null) {

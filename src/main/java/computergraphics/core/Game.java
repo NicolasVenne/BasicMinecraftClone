@@ -13,7 +13,7 @@ import computergraphics.states.GameState;
  */
 public class Game {
 
-    public static final int TARGET_FPS = 75;
+    public static final int TARGET_FPS = 60;
     public static final int TARGET_UPS = 30;
 
     private GLFWErrorCallback errorCallback;
@@ -122,13 +122,15 @@ public class Game {
 
             //Lock the delta to not be greater then 0.15 so if game 
             //freeze the player will not jump a massive distance.
-            if(delta > 0.15f) {
-                delta = 0.15f;
-            }
+            // if(delta > 0.15f) {
+            //     delta = 0.15f;
+            // }
 
             //Update the current state.
             update(delta);
+            System.out.print(delta + " ");
 
+            System.out.println(Timer.getFPS());
             //Update the timer for delta time.
             Timer.nextFrame();
 

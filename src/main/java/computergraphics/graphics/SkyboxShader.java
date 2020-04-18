@@ -8,8 +8,8 @@ import org.joml.Matrix4f;
  */
 public class SkyboxShader extends ShaderProgram{
 
-    private static final String VERTEX_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/skyboxVertexShader.glsl";
-    private static final String FRAGMENT_SHADER_FILE = "src/main/java/computergraphics/graphics/shaders/skyboxFragmentShader.glsl";
+    private static final String VERTEX_SHADER_FILE = "shaders/skyboxVertexShader.glsl";
+    private static final String FRAGMENT_SHADER_FILE = "shaders/skyboxFragmentShader.glsl";
 
     private int viewMatrixLocation;
     private int transformationMatrixLocation;

@@ -563,7 +563,9 @@ public class Chunk  {
         for(int x = 0; x < CHUNK_WIDTH; x++) {
             for(int z = 0; z < CHUNK_WIDTH; z++) {
                 for(int y = 0; y <= heightMap[x][z]; y++) {
-                    if(y < heightMap[x][z] - 4) {
+                    if(y == 0) {
+                        blocks[x][y][z] = BlockType.DIAMOND.getID();
+                    } else if(y < heightMap[x][z] - 4) {
                         blocks[x][y][z] = BlockType.STONE.getID();
                     } else if(y <= heightMap[x][z] - 1) {
                         blocks[x][y][z] = BlockType.DIRT.getID();

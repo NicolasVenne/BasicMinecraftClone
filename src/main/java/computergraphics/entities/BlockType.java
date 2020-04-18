@@ -15,7 +15,8 @@ public enum BlockType {
     AIR(0,0f),
     GRASS(1, 0.5f),
     DIRT(2, 0.5f),
-    STONE(3, 0.5f);
+    STONE(3, 0.5f),
+    DIAMOND(4,0.5f);
     
     private final Material mat;
     private final int id;
